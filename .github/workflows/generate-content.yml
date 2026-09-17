@@ -23,7 +23,7 @@ jobs:
       # ブランド追加後、topics.yamlへの同時pushで衝突しないよう直列実行にする
       max-parallel: 1
       matrix:
-        brand: [onexone-hair]
+        brand: [onexone-hair, horizon-hair]
         # 他ブランドを追加する場合はここに追記し、
         # 下の env に対応する WP_APP_PASSWORD_<ID> を1行追加する
     steps:
@@ -49,6 +49,7 @@ jobs:
         working-directory: blog-automation
         env:
           WP_APP_PASSWORD_ONEXONE_HAIR: ${{ secrets.WP_APP_PASSWORD_ONEXONE_HAIR }}
+          WP_APP_PASSWORD_HORIZON_HAIR: ${{ secrets.WP_APP_PASSWORD_HORIZON_HAIR }}
           # 未設定でもアイキャッチ画像なしで継続する(任意)
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
         run: npx tsx scripts/publish-wordpress.ts --brand ${{ matrix.brand }}

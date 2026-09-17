@@ -25,18 +25,27 @@ brands:
     bookingUrl: "https://lin.ee/NX7srEL"
     topicsFile: "content/topics/onexone-hair.yaml"
 
-  # 他ブランドは疎通確認後に追加する（例）
-  # - id: horizon-hair
-  #   name: "Horizonヘアー"
-  #   siteUrl: "https://horizon-hair.example.com"
-  #   wpUser: "blog-automation"
-  #   wpAppPasswordSecret: "WP_APP_PASSWORD_HORIZON_HAIR"
-  #   categories: ["ヘアケア"]
-  #   author:
-  #     name: "スタイリスト（担当者名に変更）"
-  #     bio: "Horizonヘアー所属スタイリスト。"
-  #   brandVoice: |
-  #     落ち着いた、丁寧な接客をイメージしたトーン。
-  #   disclaimer: "効果には個人差があります。詳しくは店舗スタッフへご相談ください。"
-  #   bookingUrl: "https://horizon-hair.example.com/reserve"
-  #   topicsFile: "content/topics/horizon-hair.yaml"
+  - id: horizon-hair
+    name: "ホライズン"
+    siteUrl: "https://onexone-hair.com/horizon"
+    wpUser: "blog-automation"
+    wpAppPasswordSecret: "WP_APP_PASSWORD_HORIZON_HAIR"
+    categories: ["髪質改善・縮毛矯正", "ヘアケア"]
+    location:
+      prefecture: "富山県"
+      city: "富山市"
+      region: "北陸"
+    author:
+      name: "スタイリスト（担当者名に変更）"
+      bio: "ホライズン所属スタイリスト。"
+    brandVoice: |
+      落ち着いた、丁寧な接客をイメージしたトーン。語尾は「です・ます調」。
+      施術効果を断定・保証する表現は使わない。
+      ホライズンは「髪質改善」「縮毛矯正」を専門とし、髪のダメージ・クセ・広がりなど
+      具体的な悩みを抱えるお客様に寄り添うサロン。カラーの話は中心にせず、
+      髪質の悩みを解決するという専門性を軸にする。
+      「髪質改善」「生まれ変わる」等は医療的な治療効果を連想させやすいため、
+      あくまで美容施術としての範囲内の表現に留め、断定的な改善保証は避ける。
+    disclaimer: "効果には個人差があります。詳しくは店舗スタッフへご相談ください。"
+    bookingUrl: "https://lin.ee/8C9oupK9"
+    topicsFile: "content/topics/horizon-hair.yaml"

@@ -34,6 +34,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # 追加ブランド分は同様に1行ずつ追記する
           WP_APP_PASSWORD_ONEXONE_HAIR: ${{ secrets.WP_APP_PASSWORD_ONEXONE_HAIR }}
+          WP_APP_PASSWORD_HORIZON_HAIR: ${{ secrets.WP_APP_PASSWORD_HORIZON_HAIR }}
         run: npx tsx scripts/approve-publish.ts --issue ${{ github.event.issue.number }}
 
       - name: Commit topic status update
