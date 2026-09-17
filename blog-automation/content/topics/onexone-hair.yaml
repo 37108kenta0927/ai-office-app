@@ -1,22 +1,47 @@
 # ネタ帳。status: pending のものから順に自動生成の対象になる。
-# seasonal: true のものは季節が近づいたら手動で並び順を上げるか、month で管理する。
+# onexone HAIRの強み（ブリーチカラー・デザインカラー）を中心に、
+# ダメージが出やすいテーマなのでヘアケア記事も間に挟む構成(カラー系:ヘアケア系 ≒ 2:1)。
+# seasonal: true のものは対象の月が来たら優先的に選ばれる。
 topics:
-  - id: humidity-frizz-care
-    title: "梅雨・夏の湿気で髪が広がる原因と自宅ケア"
-    keywords: ["髪 広がる 湿気 対策", "うねり 髪 梅雨"]
+  - id: bleach-color-basics
+    title: "ブリーチカラーで叶う透明感ヘアカラーの選び方"
+    keywords: ["ブリーチカラー", "透明感カラー", "ヘアカラー 種類"]
     seasonal: false
     status: pending
 
-  - id: graduation-hair-arrange
-    title: "卒業式・入学式に似合う髪型アレンジ"
-    keywords: ["卒業式 ヘアアレンジ", "袴 髪型"]
-    seasonal: true
-    month: 2
+  - id: first-bleach-guide
+    title: "初めてのブリーチカラー、後悔しないために知っておきたいこと"
+    keywords: ["ブリーチ 初めて", "ブリーチカラー 注意点"]
+    seasonal: false
     status: pending
 
-  - id: color-damage-care
-    title: "カラーリング後のダメージケアで気をつけたいこと"
-    keywords: ["カラー 髪 ダメージケア", "ヘアカラー 傷む 対策"]
+  - id: bleach-damage-care
+    title: "ブリーチ毛のダメージケア、サロンと自宅でできること"
+    keywords: ["ブリーチ 髪 ダメージケア", "ブリーチ毛 トリートメント"]
+    seasonal: false
+    status: pending
+
+  - id: design-color-inner
+    title: "インナーカラーとは？さりげなく個性を出すデザインカラー"
+    keywords: ["インナーカラー", "デザインカラー"]
+    seasonal: false
+    status: pending
+
+  - id: design-color-gradation
+    title: "グラデーションカラーの種類と自分に似合う選び方"
+    keywords: ["グラデーションカラー", "髪 グラデーション"]
+    seasonal: false
+    status: pending
+
+  - id: color-fade-care
+    title: "せっかくのカラーを長持ちさせる自宅ケアのコツ"
+    keywords: ["カラー 色落ち 防ぐ", "ヘアカラー 長持ち"]
+    seasonal: false
+    status: pending
+
+  - id: double-color-explained
+    title: "ダブルカラー・トリプルカラーとは？仕組みと向いている人"
+    keywords: ["ダブルカラー", "トリプルカラー 髪"]
     seasonal: false
     status: pending
 
@@ -26,9 +51,23 @@ topics:
     seasonal: false
     status: pending
 
-  - id: summer-uv-hair-care
-    title: "紫外線から髪を守る夏のヘアケア習慣"
-    keywords: ["髪 紫外線対策", "夏 髪 ケア"]
+  - id: graduation-design-color
+    title: "卒業式・入学式に映えるデザインカラー＆ヘアアレンジ"
+    keywords: ["卒業式 ヘアカラー", "入学式 髪型 デザインカラー"]
+    seasonal: true
+    month: 2
+    status: pending
+
+  - id: summer-uv-bleach-care
+    title: "紫外線からブリーチ毛を守る夏のヘアケア習慣"
+    keywords: ["ブリーチ毛 紫外線対策", "夏 髪 ケア"]
+    seasonal: true
+    month: 6
+    status: pending
+
+  - id: humidity-frizz-care
+    title: "梅雨・夏の湿気で髪が広がる原因と自宅ケア"
+    keywords: ["髪 広がる 湿気 対策", "うねり 髪 梅雨"]
     seasonal: true
     month: 6
     status: pending

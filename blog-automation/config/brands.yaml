@@ -7,13 +7,15 @@ brands:
     wpUser: "blog-automation"
     # process.env[wpAppPasswordSecret] からApplication Passwordを読む
     wpAppPasswordSecret: "WP_APP_PASSWORD_ONEXONE_HAIR"
-    categories: ["ヘアケア", "トレンド"]
+    categories: ["カラー・デザインカラー", "ヘアケア"]
     author:
       name: "スタイリスト（担当者名に変更）"
       bio: "onexone HAIR所属スタイリスト。"
     brandVoice: |
       親しみやすく、専門用語は噛み砕いて説明するトーン。語尾は「です・ます調」。
       施術効果を断定・保証する表現は使わない。
+      onexone HAIRはブリーチカラー・デザインカラー（インナーカラー、グラデーションカラーなど）を
+      得意とするサロン。記事全体を通して、その専門性が伝わるトーンにする。
     disclaimer: "効果には個人差があります。詳しくは店舗スタッフへご相談ください。"
     bookingUrl: "https://onexone-hair.example.com/reserve"
     topicsFile: "content/topics/onexone-hair.yaml"
