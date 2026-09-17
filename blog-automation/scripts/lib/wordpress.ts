@@ -113,6 +113,9 @@ export async function createDraftPost(
       slug: post.slug,
       status: "draft",
       categories: categoryIds,
+      // コメント・トラックバックは企業ブログでは不要かつスパムの温床になるため常に無効化する
+      comment_status: "closed",
+      ping_status: "closed",
     }),
   });
   await trySetSeoMeta(brand, created.id, post);
