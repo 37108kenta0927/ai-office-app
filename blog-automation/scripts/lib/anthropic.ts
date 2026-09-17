@@ -37,7 +37,7 @@ ${brand.brandVoice}
 - H2/H3見出しで論理的に構成する
 - 記事後半に「よくある質問」セクションを3問程度のQ&A形式で入れる
 - 施術効果を断定・保証する表現（「必ず」「絶対に」「治る」など）は使わない。個人差がある旨を自然に含める
-- 文末に予約導線を1箇所入れる。必ずMarkdownのリンク記法 \`[LINEで予約する](${brand.bookingUrl})\` の形式で書き、URLをそのまま裸で書かないこと
+- 記事の最後は「公式LINEで気軽に予約・相談できる」ことを一言添えて締めくくる（リンクやURLは本文中に書かなくてよい。予約ボタンはシステム側で自動的に追記される）
 - 文字数の目安は1800〜2500字
 - Markdownのみを出力し、前置きや説明文は含めない`,
       },
@@ -182,6 +182,11 @@ function markdownToHtml(markdown: string): string {
     .join("\n");
 }
 
+function lineBookingCtaHtml(brand: BrandConfig): string {
+  // 予約ボタンはAIに書かせず、公式LINEバッジを毎回固定のHTMLで確実に埋め込む。
+  return `<p style="text-align:center;"><a href="${brand.bookingUrl}" target="_blank" rel="noopener"><img src="https://scdn.line-apps.com/n/line_add_friends/btn/ja.png" alt="友だち追加" height="36" border="0"></a></p>`;
+}
+
 export async function generatePost(
   brand: BrandConfig,
   topic: Topic
@@ -196,7 +201,7 @@ export async function generatePost(
     metaDescription: review.metaDescription,
     slug: review.slug,
     bodyMarkdown: bodyWithDisclaimer,
-    bodyHtml: markdownToHtml(bodyWithDisclaimer),
+    bodyHtml: markdownToHtml(bodyWithDisclaimer) + "\n" + lineBookingCtaHtml(brand),
     jsonLd: review.jsonLd,
     internalLinkSuggestions: review.internalLinkSuggestions,
     riskFlags: review.riskFlags,
