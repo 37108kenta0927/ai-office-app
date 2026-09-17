@@ -37,7 +37,7 @@ ${brand.brandVoice}
 - H2/H3見出しで論理的に構成する
 - 記事後半に「よくある質問」セクションを3問程度のQ&A形式で入れる
 - 施術効果を断定・保証する表現（「必ず」「絶対に」「治る」など）は使わない。個人差がある旨を自然に含める
-- 文末に「${brand.bookingUrl}」への予約導線を自然な形で1箇所入れる
+- 文末に予約導線を1箇所入れる。必ずMarkdownのリンク記法 \`[LINEで予約する](${brand.bookingUrl})\` の形式で書き、URLをそのまま裸で書かないこと
 - 文字数の目安は1800〜2500字
 - Markdownのみを出力し、前置きや説明文は含めない`,
       },
@@ -138,6 +138,20 @@ ${bodyMarkdown}
   return toolUse.input as SeoReviewResult;
 }
 
+function renderInline(text: string): string {
+  // Markdownのリンク記法・太字・裸URLを実際にクリックできる<a>タグに変換する。
+  return text
+    .replace(
+      /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener">$1</a>'
+    )
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(
+      /(^|[^"'>])(https?:\/\/[^\s<]+)/g,
+      '$1<a href="$2" target="_blank" rel="noopener">$2</a>'
+    );
+}
+
 function markdownToHtml(markdown: string): string {
   // WordPressはMarkdownをそのまま解釈しないため簡易変換する。
   // 高度な変換が必要な場合は `marked` 等の導入を検討する。
@@ -147,16 +161,23 @@ function markdownToHtml(markdown: string): string {
       const heading = block.match(/^(#{1,3})\s+(.*)$/);
       if (heading) {
         const level = heading[1].length + 1; // H1は記事タイトルに使うのでH2から
-        return `<h${level}>${heading[2]}</h${level}>`;
+        return `<h${level}>${renderInline(heading[2])}</h${level}>`;
       }
       if (block.trim().startsWith("- ")) {
         const items = block
           .split("\n")
-          .map((line) => `<li>${line.replace(/^-\s+/, "")}</li>`)
+          .map((line) => `<li>${renderInline(line.replace(/^-\s+/, ""))}</li>`)
           .join("");
         return `<ul>${items}</ul>`;
       }
-      return `<p>${block.trim()}</p>`;
+      if (block.trim().startsWith("> ")) {
+        const quote = block
+          .split("\n")
+          .map((line) => line.replace(/^>\s?/, ""))
+          .join(" ");
+        return `<blockquote><p>${renderInline(quote)}</p></blockquote>`;
+      }
+      return `<p>${renderInline(block.trim())}</p>`;
     })
     .join("\n");
 }
