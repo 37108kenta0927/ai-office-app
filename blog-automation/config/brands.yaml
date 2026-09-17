@@ -3,8 +3,7 @@
 brands:
   - id: onexone-hair
     name: "onexone HAIR"
-    # TODO: 実際のサイトURLに置き換える
-    siteUrl: "https://onexone-hair.example.com"
+    siteUrl: "https://onexone-hair.com"
     wpUser: "blog-automation"
     # process.env[wpAppPasswordSecret] からApplication Passwordを読む
     wpAppPasswordSecret: "WP_APP_PASSWORD_ONEXONE_HAIR"
