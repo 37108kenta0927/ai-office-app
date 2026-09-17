@@ -8,6 +8,11 @@ brands:
     # process.env[wpAppPasswordSecret] からApplication Passwordを読む
     wpAppPasswordSecret: "WP_APP_PASSWORD_ONEXONE_HAIR"
     categories: ["カラー・デザインカラー", "ヘアケア"]
+    # 地域SEO用。記事のキーワード・タイトルに自然に織り込む。
+    location:
+      prefecture: "富山県"
+      city: "富山市"
+      region: "北陸"
     author:
       name: "スタイリスト（担当者名に変更）"
       bio: "onexone HAIR所属スタイリスト。"

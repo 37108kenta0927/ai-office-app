@@ -9,6 +9,12 @@ function client(): Anthropic {
   return new Anthropic({ apiKey });
 }
 
+function locationLine(brand: BrandConfig): string {
+  if (!brand.location) return "";
+  const { prefecture, city, region } = brand.location;
+  return `\n# 地域SEO\n${city}（${prefecture}／${region}エリア）の美容室であることを、不自然にならない範囲で本文中に1〜2箇所織り込む（例:「${city}で◯◯をお探しなら」「${region}エリアでも◯◯が得意なサロンは多くありません」など）。地名を無理に連呼するキーワード詰め込みはしないこと。`;
+}
+
 async function draftArticle(
   brand: BrandConfig,
   topic: Topic
@@ -31,6 +37,7 @@ ${topic.keywords.join(", ")}
 
 # トーン・ブランドボイス
 ${brand.brandVoice}
+${locationLine(brand)}
 
 # 執筆ルール
 - 冒頭2〜3文で結論・要点を提示する「アンサーファースト」構成にする（AI検索エンジンや生成AIに引用されやすくするため）
@@ -123,6 +130,11 @@ ${brand.siteUrl}
 
 # 想定検索キーワード
 ${topic.keywords.join(", ")}
+${
+  brand.location
+    ? `\n# 地域SEO\nこのサロンは${brand.location.city}（${brand.location.prefecture}）にある。titleとmetaDescriptionのどちらかには「${brand.location.city}」を自然な形で1回含めること（地域名で検索するユーザーに刺さるようにするため）。`
+    : ""
+}
 
 # 記事本文
 ${bodyMarkdown}

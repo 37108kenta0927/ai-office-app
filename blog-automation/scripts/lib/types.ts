@@ -3,6 +3,12 @@ export interface BrandAuthor {
   bio: string;
 }
 
+export interface BrandLocation {
+  prefecture: string;
+  city: string;
+  region: string;
+}
+
 export interface BrandConfig {
   id: string;
   name: string;
@@ -10,6 +16,7 @@ export interface BrandConfig {
   wpUser: string;
   wpAppPasswordSecret: string;
   categories: string[];
+  location?: BrandLocation;
   author: BrandAuthor;
   brandVoice: string;
   disclaimer: string;
