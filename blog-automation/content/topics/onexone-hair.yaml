@@ -1,22 +1,25 @@
 topics:
   - id: toyama-bleach-salon-choose
-    title: "富山でブリーチカラーが得意な美容室の選び方"
-    keywords: ["富山 ブリーチカラー", "富山市 美容室 カラー"]
+    title: 富山でブリーチカラーが得意な美容室の選び方
+    keywords:
+      - 富山 ブリーチカラー
+      - 富山市 美容室 カラー
     seasonal: false
-    status: pending
-
+    status: drafted
   - id: toyama-design-color-trend
-    title: "富山市で人気のデザインカラー最新トレンド"
-    keywords: ["富山市 デザインカラー", "北陸 ヘアカラー トレンド"]
+    title: 富山市で人気のデザインカラー最新トレンド
+    keywords:
+      - 富山市 デザインカラー
+      - 北陸 ヘアカラー トレンド
     seasonal: false
     status: pending
-
   - id: hokuriku-color-salon-points
-    title: "北陸エリアでカラーサロンを選ぶときに見るべきポイント"
-    keywords: ["北陸 カラーサロン", "富山 ヘアカラー 上手い"]
+    title: 北陸エリアでカラーサロンを選ぶときに見るべきポイント
+    keywords:
+      - 北陸 カラーサロン
+      - 富山 ヘアカラー 上手い
     seasonal: false
     status: pending
-
   - id: bleach-color-basics
     title: ブリーチカラーで叶う透明感ヘアカラーの選び方
     keywords:
