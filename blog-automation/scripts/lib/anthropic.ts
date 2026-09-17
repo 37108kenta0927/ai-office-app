@@ -146,7 +146,10 @@ ${
 # 記事本文
 ${bodyMarkdown}
 
-特にriskFlagsは、施術効果の断定・保証、最上級表現、ビフォーアフターの効果保証などを見逃さず厳しめにチェックしてください。`,
+特にriskFlagsは、施術効果の断定・保証、最上級表現、ビフォーアフターの効果保証などを見逃さず厳しめにチェックしてください。
+
+jsonLdのArticleスキーマには、author を {"@type":"Person","name":"${brand.author.name}"}、
+publisher を {"@type":"Organization","name":"${brand.name}"} として必ず含めてください（E-E-A-T対策のため）。`,
       },
     ],
   });
@@ -206,6 +209,11 @@ function lineBookingCtaHtml(brand: BrandConfig): string {
   return `<p style="text-align:center;"><a href="${brand.bookingUrl}" target="_blank" rel="noopener"><img src="https://scdn.line-apps.com/n/line_add_friends/btn/ja.png" alt="友だち追加" height="36" border="0"></a></p>`;
 }
 
+function authorBylineHtml(brand: BrandConfig): string {
+  // E-E-A-T対策: 執筆者の専門性を本文冒頭に明示する(WPのユーザー表示に依存しない)。
+  return `<p style="font-size:14px;color:#666;border-left:3px solid #ccc;padding-left:10px;">執筆: <strong>${brand.author.name}</strong>（${brand.author.bio}）</p>`;
+}
+
 export async function generatePost(
   brand: BrandConfig,
   topic: Topic
@@ -220,7 +228,12 @@ export async function generatePost(
     metaDescription: review.metaDescription,
     slug: review.slug,
     bodyMarkdown: bodyWithDisclaimer,
-    bodyHtml: markdownToHtml(bodyWithDisclaimer) + "\n" + lineBookingCtaHtml(brand),
+    bodyHtml:
+      authorBylineHtml(brand) +
+      "\n" +
+      markdownToHtml(bodyWithDisclaimer) +
+      "\n" +
+      lineBookingCtaHtml(brand),
     jsonLd: review.jsonLd,
     internalLinkSuggestions: review.internalLinkSuggestions,
     riskFlags: review.riskFlags,
