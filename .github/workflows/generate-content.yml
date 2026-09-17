@@ -2,9 +2,9 @@ name: Blog - Generate Content
 
 on:
   schedule:
-    # 水・木・金 07:10 JST (UTC 22:10 前日) に生成(週3回)
+    # 水・金・土 07:10 JST (UTC 22:10 前日) に生成(週3回)
     # 毎時ちょうど(0分)はGitHub Actions側のスケジュール実行が混雑し遅延しやすいため、10分ずらしている
-    - cron: "10 22 * * 2,3,4"
+    - cron: "10 22 * * 2,4,5"
   workflow_dispatch:
     inputs:
       brand:
