@@ -44,6 +44,7 @@ export interface GeneratedPost {
   jsonLd: Record<string, unknown>[];
   internalLinkSuggestions: string[];
   riskFlags: string[];
+  imageSearchQuery: string;
 }
 
 export interface PublishedDraft extends GeneratedPost {

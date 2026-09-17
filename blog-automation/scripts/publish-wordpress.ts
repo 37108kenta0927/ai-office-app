@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { loadBrand, outputFile } from "./lib/config.js";
 import { createDraftPost } from "./lib/wordpress.js";
+import { attributionHtml, searchPhoto, trackDownload } from "./lib/unsplash.js";
 import type { GeneratedPost } from "./lib/types.js";
 
 function getArg(name: string): string {
@@ -18,8 +19,27 @@ async function main() {
     readFileSync(outputFile(brand.id), "utf-8")
   ) as GeneratedPost;
 
+  let featuredImage: { url: string; filename: string } | null = null;
+  if (process.env.UNSPLASH_ACCESS_KEY) {
+    try {
+      console.log(`[publish-wordpress] searching Unsplash for "${post.imageSearchQuery}" ...`);
+      const photo = await searchPhoto(post.imageSearchQuery);
+      if (photo) {
+        await trackDownload(photo);
+        featuredImage = { url: photo.imageUrl, filename: photo.filename };
+        post.bodyHtml = `${post.bodyHtml}\n${attributionHtml(photo)}`;
+      } else {
+        console.warn("[publish-wordpress] no Unsplash photo found for query, skipping image");
+      }
+    } catch (err) {
+      console.warn("[publish-wordpress] Unsplash lookup failed, continuing without image", err);
+    }
+  } else {
+    console.log("[publish-wordpress] UNSPLASH_ACCESS_KEY not set, skipping featured image");
+  }
+
   console.log(`[publish-wordpress] creating draft on ${brand.siteUrl} ...`);
-  const draft = await createDraftPost(brand, post);
+  const draft = await createDraftPost(brand, post, featuredImage);
   writeFileSync(outputFile(brand.id), JSON.stringify(draft, null, 2), "utf-8");
   console.log(`[publish-wordpress] created WP draft #${draft.wpPostId}: ${draft.editLink}`);
 }

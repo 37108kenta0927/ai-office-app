@@ -48,6 +48,8 @@ jobs:
         working-directory: blog-automation
         env:
           WP_APP_PASSWORD_ONEXONE_HAIR: ${{ secrets.WP_APP_PASSWORD_ONEXONE_HAIR }}
+          # 未設定でもアイキャッチ画像なしで継続する(任意)
+          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
         run: npx tsx scripts/publish-wordpress.ts --brand ${{ matrix.brand }}
 
       - name: Open review issue

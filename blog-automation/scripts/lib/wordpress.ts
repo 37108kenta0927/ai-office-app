@@ -96,11 +96,66 @@ async function trySetSeoMeta(
   }
 }
 
+/**
+ * 画像URLをダウンロードしてWordPressのメディアライブラリにアップロードし、
+ * メディアIDを返す。失敗してもアイキャッチなしで記事作成は継続する。
+ */
+async function uploadFeaturedImage(
+  brand: BrandConfig,
+  imageUrl: string,
+  filename: string,
+  altText: string
+): Promise<number | null> {
+  try {
+    const imageRes = await fetch(imageUrl);
+    if (!imageRes.ok) throw new Error(`image download failed: ${imageRes.status}`);
+    const imageBuffer = await imageRes.arrayBuffer();
+
+    const uploadRes = await fetch(apiUrl(brand, "/media"), {
+      method: "POST",
+      headers: {
+        Authorization: authHeader(brand),
+        "Content-Type": "image/jpeg",
+        "Content-Disposition": `attachment; filename="${filename}"`,
+      },
+      body: Buffer.from(imageBuffer),
+    });
+    if (!uploadRes.ok) {
+      throw new Error(
+        `media upload failed: ${uploadRes.status} ${await uploadRes.text()}`
+      );
+    }
+    const media = (await uploadRes.json()) as { id: number };
+
+    await wpFetch(brand, `/media/${media.id}`, {
+      method: "POST",
+      body: JSON.stringify({ alt_text: altText, caption: altText }),
+    });
+
+    return media.id;
+  } catch (err) {
+    console.warn(
+      "[wordpress] featured image upload failed, continuing without one",
+      err
+    );
+    return null;
+  }
+}
+
 export async function createDraftPost(
   brand: BrandConfig,
-  post: GeneratedPost
+  post: GeneratedPost,
+  featuredImage?: { url: string; filename: string } | null
 ): Promise<PublishedDraft> {
   const categoryIds = await resolveCategoryIds(brand, brand.categories);
+  const featuredMediaId = featuredImage
+    ? await uploadFeaturedImage(
+        brand,
+        featuredImage.url,
+        featuredImage.filename,
+        post.title
+      )
+    : null;
   const created = await wpFetch<{
     id: number;
     link: string;
@@ -116,6 +171,7 @@ export async function createDraftPost(
       // コメント・トラックバックは企業ブログでは不要かつスパムの温床になるため常に無効化する
       comment_status: "closed",
       ping_status: "closed",
+      ...(featuredMediaId ? { featured_media: featuredMediaId } : {}),
     }),
   });
   await trySetSeoMeta(brand, created.id, post);

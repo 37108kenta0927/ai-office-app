@@ -64,6 +64,7 @@ interface SeoReviewResult {
   jsonLd: Record<string, unknown>[];
   internalLinkSuggestions: string[];
   riskFlags: string[];
+  imageSearchQuery: string;
 }
 
 const SEO_REVIEW_TOOL: Anthropic.Tool = {
@@ -96,6 +97,11 @@ const SEO_REVIEW_TOOL: Anthropic.Tool = {
         description:
           "本文中に薬機法・景品表示法上リスクがある表現があれば、該当箇所の引用と理由を列挙する。問題なければ空配列。",
       },
+      imageSearchQuery: {
+        type: "string",
+        description:
+          "アイキャッチ画像をUnsplashで検索するための英語キーワード（2〜4語）。記事の雰囲気に合う写真が見つかりやすい具体的な語にする（例: 'blonde hair bleach salon', 'hair coloring salon Japan'）。",
+      },
     },
     required: [
       "title",
@@ -104,6 +110,7 @@ const SEO_REVIEW_TOOL: Anthropic.Tool = {
       "jsonLd",
       "internalLinkSuggestions",
       "riskFlags",
+      "imageSearchQuery",
     ],
   },
 };
@@ -217,5 +224,6 @@ export async function generatePost(
     jsonLd: review.jsonLd,
     internalLinkSuggestions: review.internalLinkSuggestions,
     riskFlags: review.riskFlags,
+    imageSearchQuery: review.imageSearchQuery,
   };
 }
