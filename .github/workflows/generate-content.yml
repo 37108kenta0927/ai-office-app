@@ -2,8 +2,8 @@ name: Blog - Generate Content
 
 on:
   schedule:
-    # 月・水・金 07:00 JST (UTC 22:00 前日) に生成(週3回)
-    - cron: "0 22 * * 0,2,4"
+    # 水・木・金 07:00 JST (UTC 22:00 前日) に生成(週3回)
+    - cron: "0 22 * * 2,3,4"
   workflow_dispatch:
     inputs:
       brand:
