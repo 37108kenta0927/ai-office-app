@@ -13,8 +13,20 @@ function authHeader(brand: BrandConfig): string {
   return `Basic ${token}`;
 }
 
+/**
+ * siteUrlがサブディレクトリ(例: https://example.com/horizon/)の場合、
+ * new URL()に先頭スラッシュ付きパスを渡すとオリジン直下に解決されてしまい
+ * サブディレクトリ部分が消えてしまう。相対パスとして解決することで、
+ * ルートドメインのサイトとサブディレクトリのサイトの両方に対応する。
+ */
+function resolveUrl(brand: BrandConfig, relativePath: string): string {
+  const base = brand.siteUrl.endsWith("/") ? brand.siteUrl : `${brand.siteUrl}/`;
+  const cleanPath = relativePath.replace(/^\/+/, "");
+  return new URL(cleanPath, base).toString();
+}
+
 function apiUrl(brand: BrandConfig, path: string): string {
-  return new URL(`/wp-json/wp/v2${path}`, brand.siteUrl).toString();
+  return resolveUrl(brand, `wp-json/wp/v2${path}`);
 }
 
 async function wpFetch<T>(
@@ -175,10 +187,10 @@ export async function createDraftPost(
     }),
   });
   await trySetSeoMeta(brand, created.id, post);
-  const editLink = new URL(
-    `/wp-admin/post.php?post=${created.id}&action=edit`,
-    brand.siteUrl
-  ).toString();
+  const editLink = resolveUrl(
+    brand,
+    `wp-admin/post.php?post=${created.id}&action=edit`
+  );
   return {
     ...post,
     wpPostId: created.id,
