@@ -30,7 +30,7 @@ brands:
     siteUrl: "https://onexone-hair.com/horizon"
     wpUser: "blog-automation"
     wpAppPasswordSecret: "WP_APP_PASSWORD_HORIZON_HAIR"
-    categories: ["髪質改善・縮毛矯正", "ヘアケア"]
+    categories: ["縮毛矯正", "髪質改善", "ヘアケア"]
     location:
       prefecture: "富山県"
       city: "富山市"
