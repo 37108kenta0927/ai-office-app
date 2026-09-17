@@ -1,0 +1,34 @@
+# ネタ帳。status: pending のものから順に自動生成の対象になる。
+# seasonal: true のものは季節が近づいたら手動で並び順を上げるか、month で管理する。
+topics:
+  - id: humidity-frizz-care
+    title: "梅雨・夏の湿気で髪が広がる原因と自宅ケア"
+    keywords: ["髪 広がる 湿気 対策", "うねり 髪 梅雨"]
+    seasonal: false
+    status: pending
+
+  - id: graduation-hair-arrange
+    title: "卒業式・入学式に似合う髪型アレンジ"
+    keywords: ["卒業式 ヘアアレンジ", "袴 髪型"]
+    seasonal: true
+    month: 2
+    status: pending
+
+  - id: color-damage-care
+    title: "カラーリング後のダメージケアで気をつけたいこと"
+    keywords: ["カラー 髪 ダメージケア", "ヘアカラー 傷む 対策"]
+    seasonal: false
+    status: pending
+
+  - id: home-treatment-vs-salon
+    title: "自宅トリートメントとサロントリートメントの違い"
+    keywords: ["トリートメント 違い", "サロン 自宅 トリートメント"]
+    seasonal: false
+    status: pending
+
+  - id: summer-uv-hair-care
+    title: "紫外線から髪を守る夏のヘアケア習慣"
+    keywords: ["髪 紫外線対策", "夏 髪 ケア"]
+    seasonal: true
+    month: 6
+    status: pending

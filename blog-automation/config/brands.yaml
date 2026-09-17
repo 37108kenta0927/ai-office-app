@@ -1,0 +1,36 @@
+# ブランドごとの設定。ブランドを追加する場合はここに1エントリ追記し、
+# 対応する WP_APP_PASSWORD_<ID> シークレットをGitHub Actionsに登録するだけでよい。
+brands:
+  - id: onexone-hair
+    name: "onexone HAIR"
+    # TODO: 実際のサイトURLに置き換える
+    siteUrl: "https://onexone-hair.example.com"
+    wpUser: "blog-automation"
+    # process.env[wpAppPasswordSecret] からApplication Passwordを読む
+    wpAppPasswordSecret: "WP_APP_PASSWORD_ONEXONE_HAIR"
+    categories: ["ヘアケア", "トレンド"]
+    author:
+      name: "スタイリスト（担当者名に変更）"
+      bio: "onexone HAIR所属スタイリスト。"
+    brandVoice: |
+      親しみやすく、専門用語は噛み砕いて説明するトーン。語尾は「です・ます調」。
+      施術効果を断定・保証する表現は使わない。
+    disclaimer: "効果には個人差があります。詳しくは店舗スタッフへご相談ください。"
+    bookingUrl: "https://onexone-hair.example.com/reserve"
+    topicsFile: "content/topics/onexone-hair.yaml"
+
+  # 他ブランドは疎通確認後に追加する（例）
+  # - id: horizon-hair
+  #   name: "Horizonヘアー"
+  #   siteUrl: "https://horizon-hair.example.com"
+  #   wpUser: "blog-automation"
+  #   wpAppPasswordSecret: "WP_APP_PASSWORD_HORIZON_HAIR"
+  #   categories: ["ヘアケア"]
+  #   author:
+  #     name: "スタイリスト（担当者名に変更）"
+  #     bio: "Horizonヘアー所属スタイリスト。"
+  #   brandVoice: |
+  #     落ち着いた、丁寧な接客をイメージしたトーン。
+  #   disclaimer: "効果には個人差があります。詳しくは店舗スタッフへご相談ください。"
+  #   bookingUrl: "https://horizon-hair.example.com/reserve"
+  #   topicsFile: "content/topics/horizon-hair.yaml"

@@ -1,0 +1,51 @@
+name: Blog - Approve and Publish
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  publish:
+    if: >
+      contains(github.event.issue.labels.*.name, 'blog-review') &&
+      contains(github.event.comment.body, '/publish')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        working-directory: blog-automation
+        run: npm ci
+
+      - name: Publish approved post
+        working-directory: blog-automation
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 追加ブランド分は同様に1行ずつ追記する
+          WP_APP_PASSWORD_ONEXONE_HAIR: ${{ secrets.WP_APP_PASSWORD_ONEXONE_HAIR }}
+        run: npx tsx scripts/approve-publish.ts --issue ${{ github.event.issue.number }}
+
+      - name: Commit topic status update
+        run: |
+          git config user.name "blog-automation-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add blog-automation/content/topics/
+          git diff --cached --quiet || git commit -m "chore(blog): mark topic published (issue #${{ github.event.issue.number }})"
+          git push
+
+      - name: Announce on X
+        working-directory: blog-automation
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+        run: npx tsx scripts/post-to-x.ts
