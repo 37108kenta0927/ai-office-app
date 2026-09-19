@@ -1,58 +1,65 @@
-# ネタ帳。status: pending のものから順に自動生成の対象になる。
-# ホライズンの強み（髪質改善・縮毛矯正）を中心に、悩み解決系のテーマを揃える。
 topics:
   - id: toyama-hair-quality-salon-choose
-    title: "富山で髪質改善が得意な美容室の選び方"
-    keywords: ["富山 髪質改善", "富山市 縮毛矯正"]
+    title: 富山で髪質改善が得意な美容室の選び方
+    keywords:
+      - 富山 髪質改善
+      - 富山市 縮毛矯正
     seasonal: false
-    status: pending
-
+    status: published
   - id: straight-perm-basics
-    title: "縮毛矯正とは？くせ毛が気になる人が知っておきたい基本"
-    keywords: ["縮毛矯正 とは", "くせ毛 矯正"]
+    title: 縮毛矯正とは？くせ毛が気になる人が知っておきたい基本
+    keywords:
+      - 縮毛矯正 とは
+      - くせ毛 矯正
     seasonal: false
     status: pending
-
   - id: hair-quality-improvement-explained
-    title: "「髪質改善」でできること・できないこと"
-    keywords: ["髪質改善 効果", "髪質改善 とは"]
+    title: 「髪質改善」でできること・できないこと
+    keywords:
+      - 髪質改善 効果
+      - 髪質改善 とは
     seasonal: false
     status: pending
-
   - id: frizzy-hair-humidity-care
-    title: "湿気で広がる・うねる髪の原因と縮毛矯正という選択肢"
-    keywords: ["髪 広がる 湿気", "うねり髪 対策"]
+    title: 湿気で広がる・うねる髪の原因と縮毛矯正という選択肢
+    keywords:
+      - 髪 広がる 湿気
+      - うねり髪 対策
     seasonal: true
     month: 6
     status: pending
-
   - id: straight-perm-vs-treatment
-    title: "縮毛矯正とトリートメントの違い、どっちを選ぶべき？"
-    keywords: ["縮毛矯正 トリートメント 違い"]
+    title: 縮毛矯正とトリートメントの違い、どっちを選ぶべき？
+    keywords:
+      - 縮毛矯正 トリートメント 違い
     seasonal: false
     status: pending
-
   - id: damaged-hair-recovery-care
-    title: "傷んだ髪を健康的に見せる、サロンケアの選び方"
-    keywords: ["髪 ダメージ ケア サロン", "傷んだ髪 改善"]
+    title: 傷んだ髪を健康的に見せる、サロンケアの選び方
+    keywords:
+      - 髪 ダメージ ケア サロン
+      - 傷んだ髪 改善
     seasonal: false
     status: pending
-
   - id: straight-perm-how-long-lasts
-    title: "縮毛矯正の効果はどのくらい持続する？伸びてきたときのお手入れ"
-    keywords: ["縮毛矯正 持続期間", "縮毛矯正 リタッチ"]
+    title: 縮毛矯正の効果はどのくらい持続する？伸びてきたときのお手入れ
+    keywords:
+      - 縮毛矯正 持続期間
+      - 縮毛矯正 リタッチ
     seasonal: false
     status: pending
-
   - id: graduation-straight-hair
-    title: "卒業式・入学式前に縮毛矯正はあり？タイミングの目安"
-    keywords: ["縮毛矯正 卒業式", "入学式 前 髪"]
+    title: 卒業式・入学式前に縮毛矯正はあり？タイミングの目安
+    keywords:
+      - 縮毛矯正 卒業式
+      - 入学式 前 髪
     seasonal: true
     month: 2
     status: pending
-
   - id: home-care-after-straight-perm
-    title: "縮毛矯正後の自宅ケアで気をつけたい3つのこと"
-    keywords: ["縮毛矯正 後 ケア", "縮毛矯正 シャンプー"]
+    title: 縮毛矯正後の自宅ケアで気をつけたい3つのこと
+    keywords:
+      - 縮毛矯正 後 ケア
+      - 縮毛矯正 シャンプー
     seasonal: false
     status: pending
