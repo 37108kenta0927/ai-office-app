@@ -65,7 +65,7 @@ ${draft.internalLinkSuggestions.map((s) => `- ${s}`).join("\n") || "- なし"}
 - [ ] 薬機法・景品表示法上の懸念がないことを確認した
 - [ ] SEOタイトル・meta descriptionを確認した
 
-確認が終わったら、このIssueに \`/publish\` とコメントすると自動で公開・X告知まで実行されます。
+確認が終わったら、このIssueに \`おけ\` とコメントすると自動で公開・X告知まで実行されます。
 
 ${buildMarker({
   brandId: draft.brandId,

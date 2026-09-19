@@ -12,7 +12,7 @@ jobs:
   publish:
     if: >
       contains(github.event.issue.labels.*.name, 'blog-review') &&
-      contains(github.event.comment.body, '/publish')
+      (contains(github.event.comment.body, 'おけ') || contains(github.event.comment.body, '/publish'))
     runs-on: ubuntu-latest
     env:
       # secretsコンテキストはステップのifでは使えないため、envに一度受けてから判定する
