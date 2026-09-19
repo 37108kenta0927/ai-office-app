@@ -100,7 +100,7 @@ const SEO_REVIEW_TOOL: Anthropic.Tool = {
       imageSearchQuery: {
         type: "string",
         description:
-          "アイキャッチ画像をUnsplashで検索するための英語キーワード（2〜4語）。記事の雰囲気に合う写真が見つかりやすい具体的な語にする（例: 'blonde hair bleach salon', 'hair coloring salon Japan'）。",
+          "アイキャッチ画像をUnsplashで検索するための英語キーワード（2〜4語）。このブランドの得意分野・ブランドボイスに合う写真が見つかる具体的な語にする。他ブランドの雰囲気（例: カラー系ブランドなら派手な発色、髪質改善系ブランドなら自然でツヤのある髪など）を混同しないこと。",
       },
     },
     required: [
@@ -134,6 +134,9 @@ async function reviewAndBuildSeo(
 
 # サイトURL
 ${brand.siteUrl}
+
+# このブランドの得意分野（カテゴリー）
+${brand.categories.join(", ")}
 
 # 想定検索キーワード
 ${topic.keywords.join(", ")}
