@@ -67,5 +67,14 @@ jobs:
           git config user.name "blog-automation-bot"
           git config user.email "actions@users.noreply.github.com"
           git add blog-automation/content/topics/
-          git diff --cached --quiet || git commit -m "chore(blog): mark topic drafted for ${{ matrix.brand }}"
+          git diff --cached --quiet && exit 0
+          git commit -m "chore(blog): mark topic drafted for ${{ matrix.brand }}"
+          # 同じワークフロー内の他ブランドのジョブが自分より先にpushしている場合、
+          # このジョブのチェックアウトは古いままなのでpushが拒否される。
+          # rebaseで取り込んでからリトライする(各ブランドは別ファイルを触るため衝突しない)。
+          for i in 1 2 3 4 5; do
+            git push && exit 0
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            sleep $((RANDOM % 5 + 1))
+          done
           git push
