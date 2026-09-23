@@ -60,6 +60,13 @@ ${riskSection}
 ### 内部リンク候補
 ${draft.internalLinkSuggestions.map((s) => `- ${s}`).join("\n") || "- なし"}
 
+### 📝 本文プレビュー（ここで確認できます。WordPressへのログインは不要です）
+---
+
+${draft.bodyMarkdown}
+
+---
+
 ### レビューチェックリスト
 - [ ] 事実関係・表現を確認した
 - [ ] 薬機法・景品表示法上の懸念がないことを確認した
