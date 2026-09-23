@@ -100,7 +100,7 @@ const SEO_REVIEW_TOOL: Anthropic.Tool = {
       imageSearchQuery: {
         type: "string",
         description:
-          "アイキャッチ画像をUnsplashで検索するための英語キーワード（2〜4語）。このブランドの得意分野・ブランドボイスに合う写真が見つかる具体的な語にする。他ブランドの雰囲気（例: カラー系ブランドなら派手な発色、髪質改善系ブランドなら自然でツヤのある髪など）を混同しないこと。",
+          "アイキャッチ画像をUnsplashで検索するための英語キーワード（2〜4語）。このブランドの得意分野・ブランドボイスに合う写真が見つかる具体的な語にする。他ブランドの雰囲気（例: カラー系ブランドなら派手な発色、髪質改善系ブランドなら自然でツヤのある髪など）を混同しないこと。人物・顔が写る写真を意図する場合は、日本人・アジア人が写る写真が見つかるよう \"japanese woman\"や\"asian\"等の語を必ず含めること。人物を意図しない場合（髪や手元のクローズアップ等）は含めなくてよい。",
       },
     },
     required: [
@@ -212,11 +212,6 @@ function lineBookingCtaHtml(brand: BrandConfig): string {
   return `<p style="text-align:center;"><a href="${brand.bookingUrl}" target="_blank" rel="noopener"><img src="https://scdn.line-apps.com/n/line_add_friends/btn/ja.png" alt="友だち追加" height="36" border="0"></a></p>`;
 }
 
-function authorBylineHtml(brand: BrandConfig): string {
-  // E-E-A-T対策: 執筆者の専門性を本文冒頭に明示する(WPのユーザー表示に依存しない)。
-  return `<p style="font-size:14px;color:#666;border-left:3px solid #ccc;padding-left:10px;">執筆: <strong>${brand.author.name}</strong>（${brand.author.bio}）</p>`;
-}
-
 export async function generatePost(
   brand: BrandConfig,
   topic: Topic
@@ -232,11 +227,7 @@ export async function generatePost(
     slug: review.slug,
     bodyMarkdown: bodyWithDisclaimer,
     bodyHtml:
-      authorBylineHtml(brand) +
-      "\n" +
-      markdownToHtml(bodyWithDisclaimer) +
-      "\n" +
-      lineBookingCtaHtml(brand),
+      markdownToHtml(bodyWithDisclaimer) + "\n" + lineBookingCtaHtml(brand),
     jsonLd: review.jsonLd,
     internalLinkSuggestions: review.internalLinkSuggestions,
     riskFlags: review.riskFlags,

@@ -1,5 +1,10 @@
 import { readFileSync, writeFileSync } from "node:fs";
-import { loadBrand, outputFile } from "./lib/config.js";
+import {
+  loadBrand,
+  loadUsedImageIds,
+  outputFile,
+  saveUsedImageIds,
+} from "./lib/config.js";
 import { createDraftPost } from "./lib/wordpress.js";
 import { attributionHtml, searchPhoto, trackDownload } from "./lib/unsplash.js";
 import type { GeneratedPost } from "./lib/types.js";
@@ -23,11 +28,14 @@ async function main() {
   if (process.env.UNSPLASH_ACCESS_KEY) {
     try {
       console.log(`[publish-wordpress] searching Unsplash for "${post.imageSearchQuery}" ...`);
-      const photo = await searchPhoto(post.imageSearchQuery);
+      const usedImageIds = loadUsedImageIds();
+      const photo = await searchPhoto(post.imageSearchQuery, usedImageIds);
       if (photo) {
         await trackDownload(photo);
         featuredImage = { url: photo.imageUrl, filename: photo.filename };
         post.bodyHtml = `${post.bodyHtml}\n${attributionHtml(photo)}`;
+        usedImageIds.add(photo.id);
+        saveUsedImageIds(usedImageIds);
       } else {
         console.warn("[publish-wordpress] no Unsplash photo found for query, skipping image");
       }

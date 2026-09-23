@@ -1,4 +1,5 @@
 export interface UnsplashPhoto {
+  id: string;
   imageUrl: string;
   filename: string;
   photographerName: string;
@@ -21,13 +22,18 @@ interface UnsplashSearchResult {
   }[];
 }
 
+/**
+ * 過去に使用済みの写真IDと重複しないよう、候補を複数件取得して
+ * 除外リストに含まれない最初の1件を選ぶ。
+ */
 export async function searchPhoto(
-  query: string
+  query: string,
+  excludeIds: ReadonlySet<string> = new Set()
 ): Promise<UnsplashPhoto | null> {
   const url = new URL("https://api.unsplash.com/search/photos");
   url.searchParams.set("query", query);
   url.searchParams.set("orientation", "landscape");
-  url.searchParams.set("per_page", "1");
+  url.searchParams.set("per_page", "10");
 
   const res = await fetch(url, {
     headers: { Authorization: `Client-ID ${accessKey()}` },
@@ -36,10 +42,11 @@ export async function searchPhoto(
     throw new Error(`Unsplash search failed: ${res.status} ${await res.text()}`);
   }
   const data = (await res.json()) as UnsplashSearchResult;
-  const photo = data.results[0];
+  const photo = data.results.find((p) => !excludeIds.has(p.id)) ?? data.results[0];
   if (!photo) return null;
 
   return {
+    id: photo.id,
     imageUrl: photo.urls.regular,
     filename: `${photo.id}.jpg`,
     photographerName: photo.user.name,

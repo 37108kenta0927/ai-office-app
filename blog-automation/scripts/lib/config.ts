@@ -59,6 +59,27 @@ export function markTopicStatus(
   writeFileSync(file, yaml.dump(raw), "utf-8");
 }
 
+function usedImagesPath(): string {
+  return path.join(ROOT, "content/used-images.json");
+}
+
+/**
+ * ブランド間・記事間でアイキャッチ画像が重複しないよう、
+ * 過去に使用したUnsplash写真IDを記録・参照する。
+ */
+export function loadUsedImageIds(): Set<string> {
+  try {
+    const raw = readFileSync(usedImagesPath(), "utf-8");
+    return new Set(JSON.parse(raw) as string[]);
+  } catch {
+    return new Set();
+  }
+}
+
+export function saveUsedImageIds(ids: Set<string>): void {
+  writeFileSync(usedImagesPath(), JSON.stringify([...ids].sort(), null, 2), "utf-8");
+}
+
 export function outputDir(): string {
   return path.join(ROOT, "output");
 }
