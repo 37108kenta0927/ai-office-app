@@ -29,12 +29,43 @@ function apiUrl(brand: BrandConfig, path: string): string {
   return resolveUrl(brand, `wp-json/wp/v2${path}`);
 }
 
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * 共有レンタルサーバー(Xserver)への接続が数回に1回タイムアウトする現象が
+ * 確認されているため、ネットワーク層のエラー(fetch failed/タイムアウト)は
+ * 数回リトライする。WordPress側が返す4xx/5xxエラーはリトライしても
+ * 無駄なので対象外(即座にthrowする)。
+ */
+async function fetchWithRetry(
+  url: string,
+  init: RequestInit,
+  attempts = 3
+): Promise<Response> {
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      return await fetch(url, init);
+    } catch (err) {
+      if (attempt === attempts) throw err;
+      const waitMs = attempt * 3000;
+      console.warn(
+        `[wordpress] network error on attempt ${attempt}/${attempts} for ${url}, retrying in ${waitMs}ms...`,
+        err
+      );
+      await sleep(waitMs);
+    }
+  }
+  throw new Error("unreachable");
+}
+
 async function wpFetch<T>(
   brand: BrandConfig,
   path: string,
   init?: RequestInit
 ): Promise<T> {
-  const res = await fetch(apiUrl(brand, path), {
+  const res = await fetchWithRetry(apiUrl(brand, path), {
     ...init,
     headers: {
       "Content-Type": "application/json",
@@ -119,11 +150,11 @@ async function uploadFeaturedImage(
   altText: string
 ): Promise<number | null> {
   try {
-    const imageRes = await fetch(imageUrl);
+    const imageRes = await fetchWithRetry(imageUrl, {});
     if (!imageRes.ok) throw new Error(`image download failed: ${imageRes.status}`);
     const imageBuffer = await imageRes.arrayBuffer();
 
-    const uploadRes = await fetch(apiUrl(brand, "/media"), {
+    const uploadRes = await fetchWithRetry(apiUrl(brand, "/media"), {
       method: "POST",
       headers: {
         Authorization: authHeader(brand),
