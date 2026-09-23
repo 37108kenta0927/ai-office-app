@@ -1,3 +1,5 @@
+import { fetchWithRetry } from "./http.js";
+
 export interface UnsplashPhoto {
   id: string;
   imageUrl: string;
@@ -35,7 +37,7 @@ export async function searchPhoto(
   url.searchParams.set("orientation", "landscape");
   url.searchParams.set("per_page", "10");
 
-  const res = await fetch(url, {
+  const res = await fetchWithRetry(url.toString(), {
     headers: { Authorization: `Client-ID ${accessKey()}` },
   });
   if (!res.ok) {
@@ -60,9 +62,21 @@ export async function searchPhoto(
  * download_location エンドポイントを叩いて利用実績を通知する必要がある。
  */
 export async function trackDownload(photo: UnsplashPhoto): Promise<void> {
-  await fetch(photo.downloadLocation, {
+  await fetchWithRetry(photo.downloadLocation, {
     headers: { Authorization: `Client-ID ${accessKey()}` },
   });
+}
+
+export async function downloadPhoto(
+  photo: UnsplashPhoto
+): Promise<{ buffer: Buffer; contentType: string }> {
+  const res = await fetchWithRetry(photo.imageUrl, {});
+  if (!res.ok) throw new Error(`image download failed: ${res.status}`);
+  const arrayBuffer = await res.arrayBuffer();
+  return {
+    buffer: Buffer.from(arrayBuffer),
+    contentType: res.headers.get("content-type") ?? "image/jpeg",
+  };
 }
 
 export function attributionHtml(photo: UnsplashPhoto): string {

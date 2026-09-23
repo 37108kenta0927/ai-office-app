@@ -1,3 +1,4 @@
+import { fetchWithRetry } from "./http.js";
 import type { BrandConfig, GeneratedPost, PublishedDraft } from "./types.js";
 
 function authHeader(brand: BrandConfig): string {
@@ -27,37 +28,6 @@ function resolveUrl(brand: BrandConfig, relativePath: string): string {
 
 function apiUrl(brand: BrandConfig, path: string): string {
   return resolveUrl(brand, `wp-json/wp/v2${path}`);
-}
-
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-/**
- * 共有レンタルサーバー(Xserver)への接続が数回に1回タイムアウトする現象が
- * 確認されているため、ネットワーク層のエラー(fetch failed/タイムアウト)は
- * 数回リトライする。WordPress側が返す4xx/5xxエラーはリトライしても
- * 無駄なので対象外(即座にthrowする)。
- */
-async function fetchWithRetry(
-  url: string,
-  init: RequestInit,
-  attempts = 3
-): Promise<Response> {
-  for (let attempt = 1; attempt <= attempts; attempt++) {
-    try {
-      return await fetch(url, init);
-    } catch (err) {
-      if (attempt === attempts) throw err;
-      const waitMs = attempt * 3000;
-      console.warn(
-        `[wordpress] network error on attempt ${attempt}/${attempts} for ${url}, retrying in ${waitMs}ms...`,
-        err
-      );
-      await sleep(waitMs);
-    }
-  }
-  throw new Error("unreachable");
 }
 
 async function wpFetch<T>(
@@ -139,29 +109,32 @@ async function trySetSeoMeta(
   }
 }
 
+export interface FeaturedImageInput {
+  buffer: Buffer;
+  filename: string;
+  contentType: string;
+}
+
 /**
- * 画像URLをダウンロードしてWordPressのメディアライブラリにアップロードし、
- * メディアIDを返す。失敗してもアイキャッチなしで記事作成は継続する。
+ * 画像データをWordPressのメディアライブラリにアップロードし、メディアIDを返す。
+ * 失敗してもアイキャッチなしで記事作成は継続する。
  */
 async function uploadFeaturedImage(
   brand: BrandConfig,
-  imageUrl: string,
-  filename: string,
+  image: FeaturedImageInput,
   altText: string
 ): Promise<number | null> {
   try {
-    const imageRes = await fetchWithRetry(imageUrl, {});
-    if (!imageRes.ok) throw new Error(`image download failed: ${imageRes.status}`);
-    const imageBuffer = await imageRes.arrayBuffer();
-
     const uploadRes = await fetchWithRetry(apiUrl(brand, "/media"), {
       method: "POST",
       headers: {
         Authorization: authHeader(brand),
-        "Content-Type": "image/jpeg",
-        "Content-Disposition": `attachment; filename="${filename}"`,
+        "Content-Type": image.contentType,
+        "Content-Disposition": `attachment; filename="${image.filename}"`,
       },
-      body: Buffer.from(imageBuffer),
+      // Node実行時のfetch(undici)はBufferをそのまま受け付けるが、
+      // DOM由来のBodyInit型定義とNodeのBuffer型の間にlib上の非互換があるためキャストする。
+      body: image.buffer as BodyInit,
     });
     if (!uploadRes.ok) {
       throw new Error(
@@ -188,16 +161,11 @@ async function uploadFeaturedImage(
 export async function createDraftPost(
   brand: BrandConfig,
   post: GeneratedPost,
-  featuredImage?: { url: string; filename: string } | null
+  featuredImage?: FeaturedImageInput | null
 ): Promise<PublishedDraft> {
   const categoryIds = await resolveCategoryIds(brand, brand.categories);
   const featuredMediaId = featuredImage
-    ? await uploadFeaturedImage(
-        brand,
-        featuredImage.url,
-        featuredImage.filename,
-        post.title
-      )
+    ? await uploadFeaturedImage(brand, featuredImage, post.title)
     : null;
   const created = await wpFetch<{
     id: number;

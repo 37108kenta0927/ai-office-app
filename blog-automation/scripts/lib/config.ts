@@ -65,7 +65,8 @@ function usedImagesPath(): string {
 
 /**
  * ブランド間・記事間でアイキャッチ画像が重複しないよう、
- * 過去に使用したUnsplash写真IDを記録・参照する。
+ * 過去に使用した画像のキー（Unsplash写真ID、または
+ * content/images/<brand>/ 内のローカル画像のキー）を記録・参照する。
  */
 export function loadUsedImageIds(): Set<string> {
   try {
