@@ -20,6 +20,12 @@ async function draftArticle(
   topic: Topic
 ): Promise<string> {
   const anthropic = client();
+  // 毎回「よくある質問」形式で締めるとAI生成らしさが出てしまうため、
+  // 一定確率でのみ入れる(人間のライターが書くブログは毎回同じ構成にはならないため)
+  const includeFaq = Math.random() < 0.3;
+  const faqInstruction = includeFaq
+    ? "- 記事後半に「よくある質問」セクションを2〜3問程度のQ&A形式で入れる"
+    : "- 「よくある質問」のようなQ&A形式のセクションは入れない。読者が気になりそうな点は地の文で自然に触れ、通常の文章で締めくくる";
   const message = await anthropic.messages.create({
     model: MODEL,
     max_tokens: 4000,
@@ -42,11 +48,12 @@ ${locationLine(brand)}
 # 執筆ルール
 - 冒頭2〜3文で結論・要点を提示する「アンサーファースト」構成にする（AI検索エンジンや生成AIに引用されやすくするため）
 - H2/H3見出しで論理的に構成する
-- 記事後半に「よくある質問」セクションを3問程度のQ&A形式で入れる
+${faqInstruction}
 - 施術効果を断定・保証する表現（「必ず」「絶対に」「治る」など）は使わない。個人差がある旨を自然に含める
 - 記事の最後は「公式LINEで気軽に予約・相談できる」ことを一言添えて締めくくる（リンクやURLは本文中に書かなくてよい。予約ボタンはシステム側で自動的に追記される）
 - 文字数の目安は1800〜2500字
-- Markdownのみを出力し、前置きや説明文は含めない`,
+- Markdownのみを出力し、前置きや説明文は含めない
+- 見出しや本文の区切りとして "---" のような水平線記法は使わない`,
       },
     ],
   });
@@ -83,7 +90,7 @@ const SEO_REVIEW_TOOL: Anthropic.Tool = {
       jsonLd: {
         type: "array",
         description:
-          "Article と FAQPage の JSON-LD構造化データオブジェクトの配列（schema.org準拠）",
+          "Article の JSON-LD構造化データオブジェクトを必ず含める（schema.org準拠）。本文中に実際にQ&A形式の「よくある質問」セクションがある場合のみ、それに対応するFAQPageオブジェクトも追加する。FAQセクションが本文にない場合はArticleのみでよい。",
         items: { type: "object" },
       },
       internalLinkSuggestions: {
@@ -201,6 +208,9 @@ function markdownToHtml(markdown: string): string {
           .map((line) => line.replace(/^>\s?/, ""))
           .join(" ");
         return `<blockquote><p>${renderInline(quote)}</p></blockquote>`;
+      }
+      if (/^-{3,}$/.test(block.trim())) {
+        return "";
       }
       return `<p>${renderInline(block.trim())}</p>`;
     })
