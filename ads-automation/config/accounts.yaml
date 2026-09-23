@@ -1,0 +1,44 @@
+# Meta広告(Facebook/Instagram)アカウントの設定。
+#
+# adAccountId: Meta ビジネスマネージャの「広告アカウントID」("act_"を除いた数字部分)。
+#   広告マネージャ > 設定 > アカウント概要 で確認できる。
+# campaignNameContains: 診断対象キャンペーンを名前の部分一致で絞り込む。
+#   実際のキャンペーン名の付け方に合わせて書き換えること。
+#   命名が入り乱れていて名前では絞り込めない場合は、代わりに campaignIds:
+#   ["1234567890", ...] で直接キャンペーンIDを指定してもよい(campaignIdsがあれば
+#   campaignNameContainsより優先される)。
+accounts:
+  - id: acquisition
+    label: "集客(新規来店)"
+    adAccountId: "REPLACE_WITH_AD_ACCOUNT_ID"
+    objective: acquisition
+    campaignNameContains: ["集客"]
+    goal: "新規客の来店予約・問い合わせを増やす"
+    brandVoice: |
+      新規顧客に「行ってみたい」と思わせる広告が狙い。
+      来店予約や公式LINE相談などのコンバージョン数・コンバージョン単価を最重視する。
+
+  - id: recruit-onexone
+    label: "求人(ワンバイワン)"
+    adAccountId: "REPLACE_WITH_AD_ACCOUNT_ID"
+    objective: recruit
+    campaignNameContains: ["求人", "採用"]
+    goal: "20代でヘアカラー・デザインカラーの技術に興味があるスタイリストの応募を増やす"
+    targetPersona: |
+      年齢層: 20代
+      興味関心: ヘアカラー・デザインカラーの技術力を伸ばしたい
+    brandVoice: |
+      カラー技術を磨きたい若手スタイリストに刺さる訴求(カラー技術力・研修環境・活躍事例など)を重視する。
+
+  - id: recruit-horizon
+    label: "求人(ホライズン)"
+    adAccountId: "REPLACE_WITH_AD_ACCOUNT_ID"
+    objective: recruit
+    campaignNameContains: ["求人", "採用"]
+    goal: "髪質改善・縮毛矯正に関心があり、働き方の負担を抑えて長く働きたいスタイリストの応募を増やす"
+    targetPersona: |
+      興味関心: 髪質改善・縮毛矯正の技術
+      価値観: プライベートとの両立、過度な残業やノルマを避けたい
+    brandVoice: |
+      技術の専門性(髪質改善・縮毛矯正)と、働きやすさ(残業の少なさ、ノルマ重視でないこと等)の
+      両方を訴求する。

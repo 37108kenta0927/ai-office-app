@@ -1,0 +1,54 @@
+name: Ads - Diagnose
+
+on:
+  schedule:
+    # 毎週月曜 09:15 JST (UTC 00:15) に診断(週1回)
+    - cron: "15 0 * * 1"
+  workflow_dispatch:
+    inputs:
+      account:
+        description: "アカウントID（空なら全アカウント）"
+        required: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        account: [acquisition, recruit-onexone, recruit-horizon]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        working-directory: ads-automation
+        run: npm ci
+
+      - name: Fetch Meta Ads insights
+        if: ${{ github.event.inputs.account == '' || github.event.inputs.account == matrix.account }}
+        working-directory: ads-automation
+        env:
+          META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+        run: npx tsx scripts/fetch-insights.ts --account ${{ matrix.account }}
+
+      - name: Generate diagnosis with Claude
+        if: ${{ github.event.inputs.account == '' || github.event.inputs.account == matrix.account }}
+        working-directory: ads-automation
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY_ADS }}
+        run: npx tsx scripts/generate-diagnosis.ts --account ${{ matrix.account }}
+
+      - name: Open review issue
+        if: ${{ github.event.inputs.account == '' || github.event.inputs.account == matrix.account }}
+        working-directory: ads-automation
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx tsx scripts/notify-review.ts --account ${{ matrix.account }}
