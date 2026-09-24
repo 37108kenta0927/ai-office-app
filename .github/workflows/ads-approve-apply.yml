@@ -1,0 +1,33 @@
+name: Ads - Approve and Apply
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  apply:
+    if: >
+      contains(github.event.issue.labels.*.name, 'ads-review') &&
+      (contains(github.event.comment.body, 'おけ') || contains(github.event.comment.body, '/apply'))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        working-directory: ads-automation
+        run: npm ci
+
+      - name: Apply approved actions
+        working-directory: ads-automation
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+        run: npx tsx scripts/approve-apply.ts --issue ${{ github.event.issue.number }}

@@ -1,0 +1,23 @@
+{
+  "name": "ads-automation",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "fetch-insights": "tsx scripts/fetch-insights.ts",
+    "generate-diagnosis": "tsx scripts/generate-diagnosis.ts",
+    "notify": "tsx scripts/notify-review.ts",
+    "approve-apply": "tsx scripts/approve-apply.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "@octokit/rest": "^21.0.2",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.9.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}
