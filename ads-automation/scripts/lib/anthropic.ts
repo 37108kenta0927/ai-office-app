@@ -111,5 +111,28 @@ ${JSON.stringify(insights.campaigns, null, 2)}
   );
   if (!toolUse) throw new Error("Claude did not return a tool_use block");
   const result = toolUse.input as Omit<Diagnosis, "accountId" | "label">;
-  return { accountId: account.id, label: account.label, ...result };
+  return {
+    accountId: account.id,
+    label: account.label,
+    summary: result.summary,
+    findings: asArray(result.findings),
+    recommendedActions: asArray(result.recommendedActions),
+  };
+}
+
+/**
+ * ツール呼び出しの配列項目が、まれに文字列化されたJSONとして返ってくることがあるための防御。
+ * 配列ならそのまま、文字列ならパースを試み、それでも配列にならなければ空配列にする。
+ */
+function asArray<T>(value: unknown): T[] {
+  if (Array.isArray(value)) return value as T[];
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed)) return parsed as T[];
+    } catch {
+      // fall through
+    }
+  }
+  return [];
 }
