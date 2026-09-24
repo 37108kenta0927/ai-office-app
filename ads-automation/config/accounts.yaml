@@ -1,16 +1,16 @@
 # Meta広告(Facebook/Instagram)アカウントの設定。
 #
 # adAccountId: Meta ビジネスマネージャの「広告アカウントID」("act_"を除いた数字部分)。
-#   広告マネージャ > 設定 > アカウント概要 で確認できる。
 # campaignNameContains: 診断対象キャンペーンを名前の部分一致で絞り込む。
-#   実際のキャンペーン名の付け方に合わせて書き換えること。
-#   命名が入り乱れていて名前では絞り込めない場合は、代わりに campaignIds:
-#   ["1234567890", ...] で直接キャンペーンIDを指定してもよい(campaignIdsがあれば
-#   campaignNameContainsより優先される)。
+#   ワンバイワンは集客用・求人用のキャンペーンが同じ広告アカウントに同居しているため、
+#   キャンペーン名に「集客」「求人」「採用」等が含まれている前提で振り分けている。
+#   実際の命名規則と違う場合はここを書き換えること(そうしないと集客と求人の
+#   キャンペーンが混ざって診断されてしまう)。
+#   ホライズンは集客用・求人用で広告アカウント自体が分かれているため、絞り込み不要。
 accounts:
-  - id: acquisition
-    label: "集客(新規来店)"
-    adAccountId: "REPLACE_WITH_AD_ACCOUNT_ID"
+  - id: acquisition-onexone
+    label: "集客(ワンバイワン)"
+    adAccountId: "1488390254781720"
     objective: acquisition
     campaignNameContains: ["集客"]
     goal: "新規客の来店予約・問い合わせを増やす"
@@ -18,9 +18,18 @@ accounts:
       新規顧客に「行ってみたい」と思わせる広告が狙い。
       来店予約や公式LINE相談などのコンバージョン数・コンバージョン単価を最重視する。
 
+  - id: acquisition-horizon
+    label: "集客(ホライズン)"
+    adAccountId: "2065712894223989"
+    objective: acquisition
+    goal: "新規客の来店予約・問い合わせを増やす"
+    brandVoice: |
+      新規顧客に「行ってみたい」と思わせる広告が狙い。
+      来店予約や公式LINE相談などのコンバージョン数・コンバージョン単価を最重視する。
+
   - id: recruit-onexone
     label: "求人(ワンバイワン)"
-    adAccountId: "REPLACE_WITH_AD_ACCOUNT_ID"
+    adAccountId: "1488390254781720"
     objective: recruit
     campaignNameContains: ["求人", "採用"]
     goal: "20代でヘアカラー・デザインカラーの技術に興味があるスタイリストの応募を増やす"
@@ -32,9 +41,8 @@ accounts:
 
   - id: recruit-horizon
     label: "求人(ホライズン)"
-    adAccountId: "REPLACE_WITH_AD_ACCOUNT_ID"
+    adAccountId: "1077680905193674"
     objective: recruit
-    campaignNameContains: ["求人", "採用"]
     goal: "髪質改善・縮毛矯正に関心があり、働き方の負担を抑えて長く働きたいスタイリストの応募を増やす"
     targetPersona: |
       興味関心: 髪質改善・縮毛矯正の技術

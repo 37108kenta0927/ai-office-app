@@ -69,16 +69,21 @@ Meta広告の数値（クリック数・応募数・応募単価など）だけ�
 `ANTHROPIC_API_KEY_BLOG`をそのまま流用する設定にしてある。
 `GITHUB_TOKEN` はActionsが自動発行するため設定不要。
 
-### 3. 設定ファイル
+### 3. 設定ファイル（設定済み）
 
-`config/accounts.yaml` を開き、3つのアカウント（`acquisition` / `recruit-onexone` /
-`recruit-horizon`）それぞれについて:
+`config/accounts.yaml` は既に実際の広告アカウントIDで設定済み。
 
-- `adAccountId` を手順1-6で確認した広告アカウントIDに書き換える
-  （集客用と求人用で広告アカウント自体が別なら、それぞれ正しいIDを入れる）
-- `campaignNameContains` を実際のキャンペーン名の付け方に合わせて調整する
-  （例えば求人系のキャンペーン名に必ず「採用」と入れているならそのままでよいし、
-  そうでなければ実際の命名規則に合わせて書き換える）
+| account id | 広告アカウントID | 備考 |
+|---|---|---|
+| `acquisition-onexone` | 1488390254781720 | 求人(ワンバイワン)と同じアカウント。`campaignNameContains: ["集客"]` で絞り込み |
+| `recruit-onexone` | 1488390254781720 | 集客(ワンバイワン)と同じアカウント。`campaignNameContains: ["求人","採用"]` で絞り込み |
+| `acquisition-horizon` | 2065712894223989 | 専用アカウントのため絞り込みなし |
+| `recruit-horizon` | 1077680905193674 | 専用アカウントのため絞り込みなし |
+
+ワンバイワンは集客・求人が同じ広告アカウントに同居しているため、キャンペーン名に
+「集客」「求人」「採用」が実際に含まれているかを一度確認すること。含まれていない場合、
+`campaignNameContains` を実際の命名規則に合わせて書き換えないと、集客と求人のキャンペーンが
+混ざって診断されてしまう。
 
 ## ローカルでの動作確認
 
@@ -87,16 +92,16 @@ cd ads-automation
 npm install
 
 export META_ACCESS_TOKEN=...
-npx tsx scripts/fetch-insights.ts --account acquisition
-# output/acquisition.json に取得結果が出力される
+npx tsx scripts/fetch-insights.ts --account acquisition-onexone
+# output/acquisition-onexone.json に取得結果が出力される
 
 export ANTHROPIC_API_KEY=...
-npx tsx scripts/generate-diagnosis.ts --account acquisition
-# output/acquisition-diagnosis.json に診断結果が出力される。中身を確認する
+npx tsx scripts/generate-diagnosis.ts --account acquisition-onexone
+# output/acquisition-onexone-diagnosis.json に診断結果が出力される。中身を確認する
 
 export GITHUB_TOKEN=...
 export GITHUB_REPOSITORY=37108kenta0927/ai-office-app
-npx tsx scripts/notify-review.ts --account acquisition
+npx tsx scripts/notify-review.ts --account acquisition-onexone
 # レビュー用Issueが作成される
 ```
 

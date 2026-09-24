@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        account: [acquisition, recruit-onexone, recruit-horizon]
+        account: [acquisition-onexone, acquisition-horizon, recruit-onexone, recruit-horizon]
     steps:
       - uses: actions/checkout@v4
 
