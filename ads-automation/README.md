@@ -64,8 +64,9 @@ Meta広告の数値（クリック数・応募数・応募単価など）だけ�
 | Secret名 | 用途 |
 |---|---|
 | `META_ACCESS_TOKEN` | 手順1で発行したシステムユーザートークン |
-| `ANTHROPIC_API_KEY_ADS` | Claude API（診断の生成に使用） |
 
+`ANTHROPIC_API_KEY`（診断の生成に使用）は新規発行不要。`blog-automation`で使っている
+`ANTHROPIC_API_KEY_BLOG`をそのまま流用する設定にしてある。
 `GITHUB_TOKEN` はActionsが自動発行するため設定不要。
 
 ### 3. 設定ファイル
