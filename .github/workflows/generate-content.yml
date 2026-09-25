@@ -66,7 +66,7 @@ jobs:
         run: |
           git config user.name "blog-automation-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add blog-automation/content/topics/ blog-automation/content/used-images.json
+          git add blog-automation/content/topics/ blog-automation/content/used-images/
           git diff --cached --quiet && exit 0
           git commit -m "chore(blog): mark topic drafted for ${{ matrix.brand }}"
           # 同じワークフロー内の他ブランドのジョブが自分より先にpushしている場合、

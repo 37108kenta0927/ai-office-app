@@ -59,26 +59,33 @@ export function markTopicStatus(
   writeFileSync(file, yaml.dump(raw), "utf-8");
 }
 
-function usedImagesPath(): string {
-  return path.join(ROOT, "content/used-images.json");
+function usedImagesPath(brand: BrandConfig): string {
+  return path.join(ROOT, "content/used-images", `${brand.id}.json`);
 }
 
 /**
- * ブランド間・記事間でアイキャッチ画像が重複しないよう、
- * 過去に使用した画像のキー（Unsplash写真ID、または
- * content/images/<brand>/ 内のローカル画像のキー）を記録・参照する。
+ * 記事間でアイキャッチ画像が重複しないよう、ブランドごとに過去使用した
+ * 画像のキー（Unsplash写真ID、またはcontent/images/<brand>/ 内のローカル
+ * 画像のキー）を記録・参照する。ブランドごとにファイルを分けているのは、
+ * 全ブランド共有の1ファイルにすると、matrix内の複数ブランドのジョブが
+ * 同じファイルを同時に書き換えてgit競合(add/addコンフリクト)になり、
+ * pushが失敗してしまうため。
  */
-export function loadUsedImageIds(): Set<string> {
+export function loadUsedImageIds(brand: BrandConfig): Set<string> {
   try {
-    const raw = readFileSync(usedImagesPath(), "utf-8");
+    const raw = readFileSync(usedImagesPath(brand), "utf-8");
     return new Set(JSON.parse(raw) as string[]);
   } catch {
     return new Set();
   }
 }
 
-export function saveUsedImageIds(ids: Set<string>): void {
-  writeFileSync(usedImagesPath(), JSON.stringify([...ids].sort(), null, 2), "utf-8");
+export function saveUsedImageIds(brand: BrandConfig, ids: Set<string>): void {
+  writeFileSync(
+    usedImagesPath(brand),
+    JSON.stringify([...ids].sort(), null, 2),
+    "utf-8"
+  );
 }
 
 export function outputDir(): string {

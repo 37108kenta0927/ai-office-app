@@ -31,7 +31,7 @@ async function main() {
   ) as GeneratedPost;
 
   let featuredImage: FeaturedImageInput | null = null;
-  const usedImageIds = loadUsedImageIds();
+  const usedImageIds = loadUsedImageIds(brand);
 
   // 自社で用意した画像(content/images/<brand>/)があれば最優先で使う。
   // ストック写真より自社の実写真の方がブランディング・E-E-A-T上望ましいため。
@@ -44,7 +44,7 @@ async function main() {
       contentType: local.contentType,
     };
     usedImageIds.add(local.key);
-    saveUsedImageIds(usedImageIds);
+    saveUsedImageIds(brand, usedImageIds);
   } else if (process.env.UNSPLASH_ACCESS_KEY) {
     try {
       console.log(
@@ -61,7 +61,7 @@ async function main() {
         };
         post.bodyHtml = `${post.bodyHtml}\n${attributionHtml(photo)}`;
         usedImageIds.add(photo.id);
-        saveUsedImageIds(usedImageIds);
+        saveUsedImageIds(brand, usedImageIds);
       } else {
         console.warn("[publish-wordpress] no Unsplash photo found for query, skipping image");
       }
