@@ -5,7 +5,11 @@ import {
   outputFile,
   saveUsedImageIds,
 } from "./lib/config.js";
-import { createDraftPost, type FeaturedImageInput } from "./lib/wordpress.js";
+import {
+  createDraftPost,
+  publishPost,
+  type FeaturedImageInput,
+} from "./lib/wordpress.js";
 import {
   attributionHtml,
   downloadPhoto,
@@ -14,6 +18,16 @@ import {
 } from "./lib/unsplash.js";
 import { pickLocalImage } from "./lib/local-images.js";
 import type { GeneratedPost } from "./lib/types.js";
+
+// 明らかに壊れた生成(極端に短い本文など)を自己レビューが見逃した場合の
+// 最後の砦として、機械的な最低文字数チェックも設ける。
+const MIN_AUTO_PUBLISH_BODY_LENGTH = 800;
+
+function isEligibleForAutoPublish(post: GeneratedPost): boolean {
+  if (post.riskFlags.length > 0 || post.qualityIssues.length > 0) return false;
+  if (post.bodyMarkdown.length < MIN_AUTO_PUBLISH_BODY_LENGTH) return false;
+  return true;
+}
 
 function getArg(name: string): string {
   const idx = process.argv.indexOf(`--${name}`);
@@ -75,9 +89,25 @@ async function main() {
   }
 
   console.log(`[publish-wordpress] creating draft on ${brand.siteUrl} ...`);
-  const draft = await createDraftPost(brand, post, featuredImage);
+  let draft = await createDraftPost(brand, post, featuredImage);
   writeFileSync(outputFile(brand.id), JSON.stringify(draft, null, 2), "utf-8");
   console.log(`[publish-wordpress] created WP draft #${draft.wpPostId}: ${draft.editLink}`);
+
+  if (isEligibleForAutoPublish(post)) {
+    console.log(
+      `[publish-wordpress] no risk/quality issues found — auto-publishing #${draft.wpPostId}`
+    );
+    const published = await publishPost(brand, draft.wpPostId);
+    draft = { ...draft, autoPublished: true, previewLink: published.link };
+    writeFileSync(outputFile(brand.id), JSON.stringify(draft, null, 2), "utf-8");
+    console.log(`[publish-wordpress] published: ${draft.previewLink}`);
+  } else {
+    console.log(
+      `[publish-wordpress] leaving #${draft.wpPostId} as draft for human review ` +
+        `(riskFlags=${post.riskFlags.length}, qualityIssues=${post.qualityIssues.length}, ` +
+        `bodyLength=${post.bodyMarkdown.length})`
+    );
+  }
 }
 
 main().catch((err) => {

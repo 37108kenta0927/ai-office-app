@@ -44,6 +44,8 @@ export interface GeneratedPost {
   jsonLd: Record<string, unknown>[];
   internalLinkSuggestions: string[];
   riskFlags: string[];
+  // 薬機法・景品表示法以外の文章品質上の懸念(破綻・重複・不自然な体裁崩れなど)
+  qualityIssues: string[];
   imageSearchQuery: string;
 }
 
@@ -51,4 +53,6 @@ export interface PublishedDraft extends GeneratedPost {
   wpPostId: number;
   editLink: string;
   previewLink: string;
+  // riskFlags/qualityIssuesが共に空だった場合、人間の確認を待たずに公開済み
+  autoPublished: boolean;
 }

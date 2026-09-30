@@ -195,6 +195,7 @@ export async function createDraftPost(
     wpPostId: created.id,
     editLink,
     previewLink: created.link,
+    autoPublished: false,
   };
 }
 

@@ -24,8 +24,16 @@ async function main() {
 
   if (post.riskFlags.length > 0) {
     console.warn(
-      `[generate-post] riskFlags detected (${post.riskFlags.length}) — will be surfaced in the review issue`
+      `[generate-post] riskFlags detected (${post.riskFlags.length}) — will require human review`
     );
+  }
+  if (post.qualityIssues.length > 0) {
+    console.warn(
+      `[generate-post] qualityIssues detected (${post.qualityIssues.length}) — will require human review`
+    );
+  }
+  if (post.riskFlags.length === 0 && post.qualityIssues.length === 0) {
+    console.log("[generate-post] no risk/quality issues found — eligible for auto-publish");
   }
   console.log(`[generate-post] wrote draft to ${outputFile(brand.id)}`);
 }

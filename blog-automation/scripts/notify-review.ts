@@ -20,7 +20,11 @@ async function main() {
 
   console.log(`[notify-review] creating GitHub Issue for ${draft.title} ...`);
   await createReviewIssue(draft);
-  console.log("[notify-review] done — waiting for human review (/publish comment)");
+  console.log(
+    draft.autoPublished
+      ? "[notify-review] done — post was auto-published, issue created as a record only"
+      : "[notify-review] done — waiting for human review (おけ comment)"
+  );
 }
 
 main().catch((err) => {

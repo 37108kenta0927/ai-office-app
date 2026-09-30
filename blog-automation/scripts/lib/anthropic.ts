@@ -71,13 +71,14 @@ interface SeoReviewResult {
   jsonLd: Record<string, unknown>[];
   internalLinkSuggestions: string[];
   riskFlags: string[];
+  qualityIssues: string[];
   imageSearchQuery: string;
 }
 
 const SEO_REVIEW_TOOL: Anthropic.Tool = {
   name: "submit_seo_review",
   description:
-    "SEO/AIOメタデータと薬機法・景品表示法リスクレビューの結果を提出する",
+    "SEO/AIOメタデータと薬機法・景品表示法リスクレビュー、および文章品質レビューの結果を提出する",
   input_schema: {
     type: "object",
     properties: {
@@ -104,6 +105,12 @@ const SEO_REVIEW_TOOL: Anthropic.Tool = {
         description:
           "本文中に薬機法・景品表示法上リスクがある表現があれば、該当箇所の引用と理由を列挙する。問題なければ空配列。",
       },
+      qualityIssues: {
+        type: "array",
+        items: { type: "string" },
+        description:
+          "薬機法・景品表示法とは別に、文章としての品質に懸念がある場合に列挙する。対象例: 文意が破綻している箇所、同じ内容の不自然な繰り返し、話が本題からずれている、見出しと本文の内容が食い違う、不自然な言語（英語の混入や機械翻訳調）、極端に短い・情報量が薄い、事実確認できない具体的な数値や体験談の断定（例: 「◯人が満足」等の根拠のない実績値）。この配列が空の場合のみ、レビュー担当者の確認なしで自動公開される想定なので、少しでも違和感があれば遠慮なく指摘すること。",
+      },
       imageSearchQuery: {
         type: "string",
         description:
@@ -117,6 +124,7 @@ const SEO_REVIEW_TOOL: Anthropic.Tool = {
       "jsonLd",
       "internalLinkSuggestions",
       "riskFlags",
+      "qualityIssues",
       "imageSearchQuery",
     ],
   },
@@ -157,6 +165,9 @@ ${
 ${bodyMarkdown}
 
 特にriskFlagsは、施術効果の断定・保証、最上級表現、ビフォーアフターの効果保証などを見逃さず厳しめにチェックしてください。
+
+重要: riskFlagsとqualityIssuesが両方とも空配列の場合、この記事は人間の確認を一切経ずにそのまま公開されます。
+少しでも迷ったら空配列にせず指摘を残してください（その場合は人間のレビューに回るだけで、実害はありません）。
 
 jsonLdのArticleスキーマには、author を {"@type":"Person","name":"${brand.author.name}"}、
 publisher を {"@type":"Organization","name":"${brand.name}"} として必ず含めてください（E-E-A-T対策のため）。`,
@@ -241,6 +252,7 @@ export async function generatePost(
     jsonLd: review.jsonLd,
     internalLinkSuggestions: review.internalLinkSuggestions,
     riskFlags: review.riskFlags,
+    qualityIssues: review.qualityIssues,
     imageSearchQuery: review.imageSearchQuery,
   };
 }
