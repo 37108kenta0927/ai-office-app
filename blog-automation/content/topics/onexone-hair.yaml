@@ -48,7 +48,7 @@ topics:
       - インナーカラー
       - デザインカラー
     seasonal: false
-    status: drafted
+    status: published
   - id: design-color-gradation
     title: グラデーションカラーの種類と自分に似合う選び方
     keywords:
