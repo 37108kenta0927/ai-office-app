@@ -30,6 +30,10 @@ export interface Topic {
   keywords: string[];
   seasonal: boolean;
   month?: number;
+  /** Optional editorial context for generation and review. */
+  intent?: string;
+  /** Optional constraints or source notes for generation and review. */
+  notes?: string;
   status: "pending" | "drafted" | "published";
 }
 

@@ -23,7 +23,23 @@ import type { GeneratedPost } from "./lib/types.js";
 // 最後の砦として、機械的な最低文字数チェックも設ける。
 const MIN_AUTO_PUBLISH_BODY_LENGTH = 800;
 
+function isStringArray(value: unknown): value is string[] {
+  return (
+    Array.isArray(value) &&
+    value.every((item) => typeof item === "string" && item.trim().length > 0)
+  );
+}
+
+function reviewItemCount(value: unknown): string | number {
+  return Array.isArray(value) ? value.length : "invalid";
+}
+
 function isEligibleForAutoPublish(post: GeneratedPost): boolean {
+  // Generated JSON is untrusted at runtime. Missing, non-array, or blank
+  // review values must never be interpreted as a clean review.
+  if (!isStringArray(post.riskFlags) || !isStringArray(post.qualityIssues)) {
+    return false;
+  }
   if (post.riskFlags.length > 0 || post.qualityIssues.length > 0) return false;
   if (post.bodyMarkdown.length < MIN_AUTO_PUBLISH_BODY_LENGTH) return false;
   return true;
@@ -104,7 +120,7 @@ async function main() {
   } else {
     console.log(
       `[publish-wordpress] leaving #${draft.wpPostId} as draft for human review ` +
-        `(riskFlags=${post.riskFlags.length}, qualityIssues=${post.qualityIssues.length}, ` +
+        `(riskFlags=${reviewItemCount(post.riskFlags)}, qualityIssues=${reviewItemCount(post.qualityIssues)}, ` +
         `bodyLength=${post.bodyMarkdown.length})`
     );
   }

@@ -12,7 +12,28 @@ function client(): Anthropic {
 function locationLine(brand: BrandConfig): string {
   if (!brand.location) return "";
   const { prefecture, city, region } = brand.location;
-  return `\n# 地域SEO\n${city}（${prefecture}／${region}エリア）の美容室であることを、不自然にならない範囲で本文中に1〜2箇所織り込む（例:「${city}で◯◯をお探しなら」「${region}エリアでも◯◯が得意なサロンは多くありません」など）。地名を無理に連呼するキーワード詰め込みはしないこと。`;
+  return `\n# 地域SEO\n${city}（${prefecture}／${region}エリア）の美容室であることを、本文中に自然な範囲で1〜2箇所織り込む。競合他社・他店との比較や、他店について根拠のない断定はしない。地名を無理に連呼するキーワード詰め込みはしないこと。`;
+}
+
+function topicContext(topic: Topic): string {
+  return `# テーマの編集情報
+- 検索意図: ${topic.intent ?? "指定なし"}
+- 注記: ${topic.notes ?? "指定なし"}`;
+}
+
+function verifiedBrandInfo(brand: BrandConfig): string {
+  const location = brand.location ? `${brand.location.city}（${brand.location.prefecture}）` : "指定なし";
+  return `# 確認済みブランド情報
+- 店舗名: ${brand.name}
+- 所在地: ${location}
+- カテゴリー: ${brand.categories.join(", ")}
+- ブランドボイス: ${brand.brandVoice}`;
+}
+
+function authorSchemaInstruction(brand: BrandConfig): string {
+  return /担当者名に変更/.test(brand.author.name)
+    ? `Article の author は {"@type":"Organization","name":"${brand.name}"} とし、担当者の実名は作らない。`
+    : `Article の author は {"@type":"Person","name":"${brand.author.name}"} とする。`;
 }
 
 async function draftArticle(
@@ -41,8 +62,10 @@ ${topic.title}
 # 想定検索キーワード
 ${topic.keywords.join(", ")}
 
+${topicContext(topic)}
+${verifiedBrandInfo(brand)}
+
 # トーン・ブランドボイス
-${brand.brandVoice}
 ${locationLine(brand)}
 
 # 執筆ルール
@@ -53,6 +76,8 @@ ${faqInstruction}
 - 記事の最後は「公式LINEで気軽に予約・相談できる」ことを一言添えて締めくくる（リンクやURLは本文中に書かなくてよい。予約ボタンはシステム側で自動的に追記される）
 - 文字数の目安は1800〜2500字
 - Markdownのみを出力し、前置きや説明文は含めない
+- 確認済みブランド情報以外の、店舗固有の価格・施術時間・薬剤・商品・設備・サービス対応可否・実績・スタッフ経験・休憩対応・お直し／返金条件を、推測して記載・断定しない。本文、タイトル、説明文、構造化データのすべてに適用する
+- 医療診断・治療のような表現、効果や安全性の保証、一律の温度・施術間隔の指示、自己流の薬剤修正は避ける
 - 見出しや本文の区切りとして "---" のような水平線記法は使わない`,
       },
     ],
@@ -151,7 +176,8 @@ async function reviewAndBuildSeo(
 ${brand.siteUrl}
 
 # このブランドの得意分野（カテゴリー）
-${brand.categories.join(", ")}
+${verifiedBrandInfo(brand)}
+${topicContext(topic)}
 
 # 想定検索キーワード
 ${topic.keywords.join(", ")}
@@ -164,13 +190,16 @@ ${
 # 記事本文
 ${bodyMarkdown}
 
+本文だけでなく、title、metaDescription、JSON-LD も確認する。確認済みブランド情報にない店舗固有の価格・施術時間・薬剤・商品・設備・サービス対応可否・実績・スタッフ経験・休憩対応・お直し／返金条件の断定は、すべて qualityIssues に列挙する。医療診断・治療のような表現、効果や安全性の保証、一律の温度・施術間隔の指示、自己流の薬剤修正も qualityIssues に列挙する。
+${authorSchemaInstruction(brand)}
+
 特にriskFlagsは、施術効果の断定・保証、最上級表現、ビフォーアフターの効果保証などを見逃さず厳しめにチェックしてください。
 
 重要: riskFlagsとqualityIssuesが両方とも空配列の場合、この記事は人間の確認を一切経ずにそのまま公開されます。
 少しでも迷ったら空配列にせず指摘を残してください（その場合は人間のレビューに回るだけで、実害はありません）。
 
-jsonLdのArticleスキーマには、author を {"@type":"Person","name":"${brand.author.name}"}、
-publisher を {"@type":"Organization","name":"${brand.name}"} として必ず含めてください（E-E-A-T対策のため）。`,
+Article の JSON-LD には ${authorSchemaInstruction(brand)}
+publisher は {"@type":"Organization","name":"${brand.name}"} として必ず含める。
       },
     ],
   });
