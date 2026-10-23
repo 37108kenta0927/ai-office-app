@@ -199,7 +199,7 @@ ${authorSchemaInstruction(brand)}
 少しでも迷ったら空配列にせず指摘を残してください（その場合は人間のレビューに回るだけで、実害はありません）。
 
 Article の JSON-LD には ${authorSchemaInstruction(brand)}
-publisher は {"@type":"Organization","name":"${brand.name}"} として必ず含める。
+publisher は {"@type":"Organization","name":"${brand.name}"} として必ず含める。`,
       },
     ],
   });
