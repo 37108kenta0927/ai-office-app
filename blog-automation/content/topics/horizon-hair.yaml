@@ -66,17 +66,17 @@ topics:
   - id: horizon-hair-forties-hair-changes
     title: 40代になって髪がまとまりにくいと感じたら。美容室で伝えたい変化
     keywords:
-    - 40代 髪 まとまらない
-    - 髪質 変化 美容室 相談
+      - 40代 髪 まとまらない
+      - 髪質 変化 美容室 相談
     intent: 以前との違いを感じる女性。年齢だけで原因を決めつけず状態と履歴の共有を扱う。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
-    status: pending
+    status: drafted
   - id: horizon-hair-natural-volume-straight
     title: 縮毛矯正でぺたんこになるのが心配。自然な仕上がりを相談するポイント
     keywords:
-    - 縮毛矯正 ぺたんこ
-    - 縮毛矯正 自然な仕上がり
+      - 縮毛矯正 ぺたんこ
+      - 縮毛矯正 自然な仕上がり
     intent: クセを整えつつボリュームを残したい人。施術前に希望する形をすり合わせる。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -84,8 +84,8 @@ topics:
   - id: horizon-hair-partial-face-straight
     title: 前髪・顔まわりだけクセが気になる。縮毛矯正の範囲をどう相談する？
     keywords:
-    - 前髪 くせ 縮毛矯正
-    - 顔まわり 縮毛矯正
+      - 前髪 くせ 縮毛矯正
+      - 顔まわり 縮毛矯正
     intent: 全体施術が必要か迷う人。部分施術メニューの提供可否は確認してから案内。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -93,8 +93,8 @@ topics:
   - id: horizon-hair-straight-color-sequence
     title: 縮毛矯正とカラー、どちらを先に相談する？施術履歴を伝えるポイント
     keywords:
-    - 縮毛矯正 カラー 順番
-    - 縮毛矯正 カラー 間隔
+      - 縮毛矯正 カラー 順番
+      - 縮毛矯正 カラー 間隔
     intent: 両施術の予定を組みたい人。順序や間隔を一律に指定しない。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -102,8 +102,8 @@ topics:
   - id: horizon-hair-bleached-straight-consult
     title: ブリーチ履歴があっても縮毛矯正を相談できる？予約前に伝えたいこと
     keywords:
-    - ブリーチ毛 縮毛矯正
-    - 縮毛矯正 ブリーチ 履歴
+      - ブリーチ毛 縮毛矯正
+      - 縮毛矯正 ブリーチ 履歴
     intent: ブリーチ済みの髪で矯正を考える人。施術可能と断言せず適否確認を主題にする。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -111,8 +111,8 @@ topics:
   - id: horizon-hair-daily-iron-comparison
     title: 毎朝アイロンを使っている人へ。縮毛矯正を考えるときの比較ポイント
     keywords:
-    - 毎日 アイロン 縮毛矯正
-    - 縮毛矯正 迷う
+      - 毎日 アイロン 縮毛矯正
+      - 縮毛矯正 迷う
     intent: 日々のスタイリングとサロン施術を比較したい人。損傷や時短を保証しない。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -120,8 +120,8 @@ topics:
   - id: horizon-hair-cut-straightened-bob
     title: 縮毛矯正した髪を短くしたい。ボブにする前に相談したいこと
     keywords:
-    - 縮毛矯正 ボブ
-    - 縮毛矯正後 髪 短くする
+      - 縮毛矯正 ボブ
+      - 縮毛矯正後 髪 短くする
     intent: 施術済みの髪を切りたい人。これから短髪に矯正する場合と順序を分ける。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -129,8 +129,8 @@ topics:
   - id: horizon-hair-grow-long-straight
     title: 髪を伸ばしながらクセを整えたい。根元と毛先で相談内容を分けるコツ
     keywords:
-    - 髪 伸ばす 縮毛矯正
-    - 縮毛矯正 毛先 ダメージ 相談
+      - 髪 伸ばす 縮毛矯正
+      - 縮毛矯正 毛先 ダメージ 相談
     intent: 長さを保ちながら伸ばしたい人。単純なリタッチ時期ではなく毛先の目標と状態に限定。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -138,8 +138,8 @@ topics:
   - id: horizon-hair-winter-dry-frizz
     title: 空調のある室内で髪が広がると感じたら。手入れと環境の見直し方
     keywords:
-    - エアコン 髪 広がる
-    - 室内 髪 乾燥
+      - エアコン 髪 広がる
+      - 室内 髪 乾燥
     intent: 空調環境に長くいる人の扱いにくさを相談。湿気や季節だけで原因を断定しない。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -147,8 +147,8 @@ topics:
   - id: horizon-hair-straight-photo-language
     title: 縮毛矯正の仕上がりをうまく伝えるには？写真と言葉で相談する方法
     keywords:
-    - 縮毛矯正 オーダー
-    - 縮毛矯正 相談 伝え方
+      - 縮毛矯正 オーダー
+      - 縮毛矯正 相談 伝え方
     intent: 希望するまっすぐさや毛先を言語化したい人。参考画像を使うカウンセリング準備。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -156,8 +156,8 @@ topics:
   - id: horizon-hair-fine-hair-straight-consultation
     title: 細くやわらかい髪で縮毛矯正を考えるとき、相談したいこと
     keywords:
-    - 細い髪 縮毛矯正
-    - 軟毛 縮毛矯正
+      - 細い髪 縮毛矯正
+      - 軟毛 縮毛矯正
     intent: 細さに応じた施術可否と履歴確認。仕上がりのボリューム不安とは分けて髪の状態を主題にする
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -165,8 +165,8 @@ topics:
   - id: horizon-hair-thick-hair-straight-consultation
     title: 髪が多くて結びにくい。量とクセを分けて美容室で相談するには
     keywords:
-    - 多毛 くせ毛
-    - 髪 多い 縮毛矯正
+      - 多毛 くせ毛
+      - 髪 多い 縮毛矯正
     intent: 毛量とクセによる膨らみを混同しない相談。矯正で毛量が減るとは言わない
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -174,8 +174,8 @@ topics:
   - id: horizon-hair-gray-hair-texture-consultation
     title: 白髪を染めずに過ごす髪、うねりや手触りはどう相談する？
     keywords:
-    - 白髪 うねり 相談
-    - グレイヘア 髪質
+      - 白髪 うねり 相談
+      - グレイヘア 髪質
     intent: 染めない選択をしている人の髪質相談。白髪染めではなく現在の髪と残る施術履歴を整理する
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -183,8 +183,8 @@ topics:
   - id: horizon-hair-short-hair-straight-planning
     title: ショートヘアで縮毛矯正を考えたら、長さと丸みをどう相談する？
     keywords:
-    - ショート 縮毛矯正
-    - 短い髪 縮毛矯正
+      - ショート 縮毛矯正
+      - 短い髪 縮毛矯正
     intent: これから矯正する短髪のデザイン相談。矯正済みの髪をボブに切るテーマと施術順序を分離する
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -192,8 +192,8 @@ topics:
   - id: horizon-hair-layered-hair-straight-planning
     title: レイヤーのある髪に縮毛矯正をかけたい。段差と毛先の見え方を相談するには
     keywords:
-    - レイヤー 縮毛矯正
-    - 段カット 縮毛矯正
+      - レイヤー 縮毛矯正
+      - 段カット 縮毛矯正
     intent: 段差のある既存スタイルを保ちながら施術する相談。長さ変更ではなくシルエットをすり合わせる
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -201,8 +201,8 @@ topics:
   - id: horizon-hair-perm-history-straight-consultation
     title: パーマが残っている髪をまっすぐにしたい。予約前に伝える施術履歴
     keywords:
-    - パーマ後 縮毛矯正
-    - パーマ 落とす 相談
+      - パーマ後 縮毛矯正
+      - パーマ 落とす 相談
     intent: ウェーブパーマからの変更希望。ブリーチやカラーとは異なる施術履歴を整理する
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -210,8 +210,8 @@ topics:
   - id: horizon-hair-henna-history-straight-consultation
     title: ヘナや植物由来のカラーを使った髪で、縮毛矯正を相談するときの確認事項
     keywords:
-    - ヘナ 縮毛矯正
-    - 植物性カラー 縮毛矯正
+      - ヘナ 縮毛矯正
+      - 植物性カラー 縮毛矯正
     intent: 使用製品と時期を確認する。天然表示なら必ず他施術と両立するとはせず、対応可否は個別確認
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -219,8 +219,8 @@ topics:
   - id: horizon-hair-home-straightening-history
     title: 市販のストレート剤を使ったあと、美容室に何を伝えればいい？
     keywords:
-    - 市販 ストレート剤 美容室
-    - セルフ 縮毛矯正 相談
+      - 市販 ストレート剤 美容室
+      - セルフ 縮毛矯正 相談
     intent: 自宅で薬剤を使った人の来店準備。やり直し手順は教えず、商品情報や使用範囲の共有に限定
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -228,8 +228,8 @@ topics:
   - id: horizon-hair-unknown-straightening-history
     title: 前の美容室で何をしたか分からない。縮毛矯正の履歴を伝える方法
     keywords:
-    - 縮毛矯正 履歴 わからない
-    - 美容室 施術履歴
+      - 縮毛矯正 履歴 わからない
+      - 美容室 施術履歴
     intent: 施術名や薬剤名が不明な転店客向け。時期や写真等の分かる情報を整理する
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -237,8 +237,8 @@ topics:
   - id: horizon-hair-asymmetric-wave-consultation
     title: 左右でクセの強さが違う髪、縮毛矯正の相談で見てもらいたいところ
     keywords:
-    - 左右 くせ毛 違う
-    - 片側 髪 うねる
+      - 左右 くせ毛 違う
+      - 片側 髪 うねる
     intent: 左右差や普段の分け目を相談。前髪だけの施術範囲とは異なる非対称な状態の共有
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -246,8 +246,8 @@ topics:
   - id: horizon-hair-wet-dry-hair-difference
     title: 濡れたときと乾いたときで髪の見え方が違う。美容室に伝える観察ポイント
     keywords:
-    - 濡れると くせ毛
-    - 乾くと 髪 広がる
+      - 濡れると くせ毛
+      - 乾くと 髪 広がる
     intent: 原因診断ではなく状態の変化を記録して相談。湿気一般の原因解説と分離する
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -255,8 +255,8 @@ topics:
   - id: horizon-hair-surface-flyaway-consultation
     title: 表面の短い毛が浮くのが気になる。縮毛矯正の前に確認したいこと
     keywords:
-    - 髪 表面 短い毛
-    - アホ毛 縮毛矯正
+      - 髪 表面 短い毛
+      - アホ毛 縮毛矯正
     intent: 表面の短い毛と全体のクセを区別して相談。すべてが施術で収まるとは約束しない
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -264,8 +264,8 @@ topics:
   - id: horizon-hair-underlayer-wave-consultation
     title: 内側の髪だけうねって膨らむ。見えにくいクセを相談するコツ
     keywords:
-    - 髪 内側 うねる
-    - 内側 くせ毛
+      - 髪 内側 うねる
+      - 内側 くせ毛
     intent: 表面の見た目だけでは伝わりにくい内部のクセを主題にする。全体の毛量や前髪の話と分離
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -273,8 +273,8 @@ topics:
   - id: horizon-hair-nape-hair-tangling-consultation
     title: 襟足の髪が絡まりやすいとき、美容室で確認したいこと
     keywords:
-    - 襟足 髪 絡まる
-    - 襟足 くせ毛
+      - 襟足 髪 絡まる
+      - 襟足 くせ毛
     intent: 日常的な襟足の絡まりを相談。矯正の適応を決めつけず、状態と履歴を共有する
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -282,8 +282,8 @@ topics:
   - id: horizon-hair-cowlick-versus-wave
     title: 生えグセと髪のうねり、同じように整えられる？相談前に知っておきたい違い
     keywords:
-    - 生えグセ 縮毛矯正
-    - つむじ くせ毛
+      - 生えグセ 縮毛矯正
+      - つむじ くせ毛
     intent: 根元の向きと毛髪の形状を分ける相談。矯正で生え方自体を変えられるとの期待を避ける
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -291,8 +291,8 @@ topics:
   - id: horizon-hair-bedhead-after-straightening
     title: 縮毛矯正をしていても寝ぐせはつく？朝の状態を見ながら相談するポイント
     keywords:
-    - 縮毛矯正 寝ぐせ
-    - 縮毛矯正 朝 はねる
+      - 縮毛矯正 寝ぐせ
+      - 縮毛矯正 朝 はねる
     intent: 寝ぐせと施術の仕上がりの区別に絞る。永久に寝ぐせがつかないという期待を整理する
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -300,8 +300,8 @@ topics:
   - id: horizon-hair-post-straightening-concern-contact
     title: 縮毛矯正のあと仕上がりが気になったら、いつ・何を美容室に伝える？
     keywords:
-    - 縮毛矯正 仕上がり 気になる
-    - 縮毛矯正 美容室 連絡
+      - 縮毛矯正 仕上がり 気になる
+      - 縮毛矯正 美容室 連絡
     intent: 施術後の違和感を相談する連絡準備。無償のお直し期間や返金条件は作らず店舗へ確認する
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -309,8 +309,8 @@ topics:
   - id: horizon-hair-partial-wave-return-consultation
     title: 縮毛矯正後、一部分だけクセが気になる。相談前に整理したいこと
     keywords:
-    - 縮毛矯正 一部 うねる
-    - 縮毛矯正 部分的 戻る
+      - 縮毛矯正 一部 うねる
+      - 縮毛矯正 部分的 戻る
     intent: 局所的な状態と気づいた時期を共有。根元の伸びによる定期リタッチとは別の意図
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -318,8 +318,8 @@ topics:
   - id: horizon-hair-straightening-end-bend-consultation
     title: 縮毛矯正後の毛先がまっすぐすぎると感じたら、どう相談する？
     keywords:
-    - 縮毛矯正 毛先 まっすぐ
-    - 縮毛矯正 毛先 相談
+      - 縮毛矯正 毛先 まっすぐ
+      - 縮毛矯正 毛先 相談
     intent: 施術済みの毛先の形が気になる人向け。施術前の自然な仕上がり希望とは時点と次の行動を区別
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -327,8 +327,8 @@ topics:
   - id: horizon-hair-curling-iron-after-straightening
     title: 縮毛矯正した髪をコテで巻きたい。美容室で確認しておきたいこと
     keywords:
-    - 縮毛矯正 コテ
-    - 縮毛矯正 巻き髪
+      - 縮毛矯正 コテ
+      - 縮毛矯正 巻き髪
     intent: 施術後も巻き髪を楽しみたい人向け。機器温度や再開日を全員一律に指定しない
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -336,8 +336,8 @@ topics:
   - id: horizon-hair-hair-arrangement-straightening
     title: まとめ髪をよくする人が、縮毛矯正のカウンセリングで伝えたいこと
     keywords:
-    - 縮毛矯正 まとめ髪
-    - 縮毛矯正 ヘアアレンジ
+      - 縮毛矯正 まとめ髪
+      - 縮毛矯正 ヘアアレンジ
     intent: 普段のまとめ髪の形や顔まわりの希望を共有。施術直後に結ぶ可否の総論とは分離
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -345,8 +345,8 @@ topics:
   - id: horizon-hair-exercise-after-straightening
     title: 運動習慣がある人の縮毛矯正。汗をかく予定はどう相談する？
     keywords:
-    - 縮毛矯正 運動
-    - 縮毛矯正 ジム
+      - 縮毛矯正 運動
+      - 縮毛矯正 ジム
     intent: 運動予定と施術日の調整。再開時期は担当者へ確認し固定日数を保証しない
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -354,8 +354,8 @@ topics:
   - id: horizon-hair-swimming-and-straightening
     title: プールに通っている人が縮毛矯正前に伝えておきたいこと
     keywords:
-    - 縮毛矯正 プール
-    - 縮毛矯正 水泳
+      - 縮毛矯正 プール
+      - 縮毛矯正 水泳
     intent: 定期的な水泳と施術の両立。水質の影響を一律に断定せず利用習慣を共有する
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -363,8 +363,8 @@ topics:
   - id: horizon-hair-onsen-sauna-and-straightening
     title: 温泉・サウナの予定があるとき、縮毛矯正の予約前に確認したいこと
     keywords:
-    - 縮毛矯正 温泉
-    - 縮毛矯正 サウナ
+      - 縮毛矯正 温泉
+      - 縮毛矯正 サウナ
     intent: 入浴施設の利用予定から施術日を相談。利用を禁止・推奨する一律の結論にしない
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -372,8 +372,8 @@ topics:
   - id: horizon-hair-helmet-and-straightening
     title: 通勤でヘルメットをかぶる人の縮毛矯正。予約時に伝えたい生活習慣
     keywords:
-    - 縮毛矯正 ヘルメット
-    - 縮毛矯正 自転車 通勤
+      - 縮毛矯正 ヘルメット
+      - 縮毛矯正 自転車 通勤
     intent: ヘルメットの着用時間と髪型の両立。安全装備を外す提案はせず施術時期や扱い方を相談
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -381,8 +381,8 @@ topics:
   - id: horizon-hair-glasses-and-face-framing
     title: 眼鏡をかけたときの顔まわりまで考える、縮毛矯正の相談ポイント
     keywords:
-    - 縮毛矯正 眼鏡
-    - 眼鏡 顔まわり 髪
+      - 縮毛矯正 眼鏡
+      - 眼鏡 顔まわり 髪
     intent: 眼鏡装着時の見え方や収まりを確認。前髪の施術範囲ではなく日常の装着状態を主題にする
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -390,8 +390,8 @@ topics:
   - id: horizon-hair-night-shift-hair-routine
     title: 夜勤や早朝勤務で髪を整える時間が不規則。美容室でどう相談する？
     keywords:
-    - 夜勤 髪 手入れ
-    - 朝 髪 時間ない
+      - 夜勤 髪 手入れ
+      - 朝 髪 時間ない
     intent: 洗髪や睡眠、出勤時刻が不規則な人の手入れ計画。縮毛矯正で手入れ不要とは言わない
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -399,8 +399,8 @@ topics:
   - id: horizon-hair-travel-straightening-planning
     title: 旅行前に縮毛矯正を考えたら、日程と現地での手入れを相談しよう
     keywords:
-    - 旅行前 縮毛矯正
-    - 旅行 髪 手入れ
+      - 旅行前 縮毛矯正
+      - 旅行 髪 手入れ
     intent: 移動や宿泊先の道具、日程に合わせた準備。式典のタイミング記事と条件を分離する
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -408,8 +408,8 @@ topics:
   - id: horizon-hair-wedding-photo-straightening
     title: 結婚式や前撮りを控えた縮毛矯正。ヘアアレンジの担当者にも確認したいこと
     keywords:
-    - 前撮り 縮毛矯正
-    - 結婚式 縮毛矯正
+      - 前撮り 縮毛矯正
+      - 結婚式 縮毛矯正
     intent: 当日のアレンジ担当との共有を中心にする。卒業入学式記事のイベント名差し替えにしない
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -417,8 +417,8 @@ topics:
   - id: horizon-hair-transition-to-natural-hair
     title: 縮毛矯正を続けず地毛に戻したい。伸ばしかけの髪をどう整える？
     keywords:
-    - 縮毛矯正 やめたい
-    - 縮毛矯正 地毛に戻す
+      - 縮毛矯正 やめたい
+      - 縮毛矯正 地毛に戻す
     intent: 薬剤施術をやめる意思がある人の移行期間の相談。長さを伸ばしながら矯正を続ける候補とは目的が逆
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -426,8 +426,8 @@ topics:
   - id: horizon-hair-summer-sweat-face-framing
     title: 汗をかくと顔まわりの髪が気になる。どんな場面を美容室で伝える？
     keywords:
-    - 汗 前髪 うねる
-    - 汗 顔まわり 髪
+      - 汗 前髪 うねる
+      - 汗 顔まわり 髪
     intent: 通勤や活動中に汗をかいた場面の状態共有。運動後の施術日程調整ではなく顔まわりの観察。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -435,8 +435,8 @@ topics:
   - id: horizon-hair-winter-scarf-hair-management
     title: 襟の高い服で髪が絡まる・跳ねる。服装も含めた髪の相談
     keywords:
-    - ハイネック 髪 はねる
-    - 襟 髪 絡まる
+      - ハイネック 髪 はねる
+      - 襟 髪 絡まる
     intent: 襟の高さと髪の長さ・収まりを相談。日常の襟足状態や空調環境とは着衣条件で分ける。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -444,8 +444,8 @@ topics:
   - id: horizon-hair-back-of-head-drying
     title: 後頭部がうまく乾かせず広がる。美容室で教わりたい乾かし方の確認ポイント
     keywords:
-    - 後頭部 髪 乾かし方
-    - 後ろ 髪 広がる
+      - 後頭部 髪 乾かし方
+      - 後ろ 髪 広がる
     intent: 見えにくい後頭部の操作を教わる相談。一般的ケアの総論ではなく手入れ技術の具体的な課題
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -453,8 +453,8 @@ topics:
   - id: horizon-hair-brush-comb-selection
     title: 髪が引っかかるブラシを使い続けていない？美容室で道具を相談するには
     keywords:
-    - 髪 ブラシ 引っかかる
-    - くせ毛 ブラシ 選び方
+      - 髪 ブラシ 引っかかる
+      - くせ毛 ブラシ 選び方
     intent: 自分の髪と道具の組み合わせを見直す人向け。未確認の商品や販売サービスは推薦しない
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -462,8 +462,8 @@ topics:
   - id: horizon-hair-too-much-hair-oil
     title: 髪の広がりを抑えようとオイルを重ねてしまう。手入れを見直す相談ポイント
     keywords:
-    - ヘアオイル つけすぎ
-    - 髪 広がる オイル
+      - ヘアオイル つけすぎ
+      - 髪 広がる オイル
     intent: 整髪剤を増やしても納得できない人の使用量と仕上がりの相談。施術への誘導や商品効果の断定を避ける
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -471,8 +471,8 @@ topics:
   - id: horizon-hair-salon-visit-hair-preparation
     title: 縮毛矯正の来店前、髪は結ぶ？スタイリング剤は使う？確認しておきたい準備
     keywords:
-    - 縮毛矯正 来店前
-    - 縮毛矯正 スタイリング剤
+      - 縮毛矯正 来店前
+      - 縮毛矯正 スタイリング剤
     intent: 来店当日の髪の状態をどう整えるか。洗髪や整髪剤の可否を店舗未確認のまま規則化しない
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -480,8 +480,8 @@ topics:
   - id: horizon-hair-bring-haircare-information
     title: 使っているシャンプーやヘアケア剤、美容室でどこまで伝えるといい？
     keywords:
-    - 美容室 シャンプー 伝える
-    - ヘアケア 相談 商品名
+      - 美容室 シャンプー 伝える
+      - ヘアケア 相談 商品名
     intent: 普段の製品情報を相談に持ち込む方法。商品比較ではなく情報共有の準備を主題にする
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -489,8 +489,8 @@ topics:
   - id: horizon-hair-long-appointment-comfort
     title: 長時間の美容室が気になる方へ。縮毛矯正の予約前に相談できること
     keywords:
-    - 縮毛矯正 長時間
-    - 美容室 長時間 不安
+      - 縮毛矯正 長時間
+      - 美容室 長時間 不安
     intent: 所要時間や途中の休憩等を事前確認。設備や休憩対応を店舗の約束として書かない
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -498,8 +498,8 @@ topics:
   - id: horizon-hair-straightening-price-quote
     title: 縮毛矯正の料金は何を確認すればいい？予約前に見積もりで聞きたい項目
     keywords:
-    - 縮毛矯正 料金 内訳
-    - 縮毛矯正 追加料金
+      - 縮毛矯正 料金 内訳
+      - 縮毛矯正 追加料金
     intent: 長さや施術範囲、カット等の料金に含まれる内容を確認。金額や追加条件は推測しない
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
@@ -507,8 +507,8 @@ topics:
   - id: horizon-hair-annual-hair-budget-planning
     title: 髪の手入れにかける予算を決めたい。縮毛矯正の年間計画を相談するには
     keywords:
-    - 縮毛矯正 年間 予算
-    - 美容室 予算 相談
+      - 縮毛矯正 年間 予算
+      - 美容室 予算 相談
     intent: 予算と来店可能回数から優先順位を考える。持続期間やリタッチ頻度ではなく生活予算の意思決定に限定
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
