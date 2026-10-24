@@ -80,7 +80,7 @@ topics:
     intent: クセを整えつつボリュームを残したい人。施術前に希望する形をすり合わせる。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
-    status: pending
+    status: drafted
   - id: horizon-hair-partial-face-straight
     title: 前髪・顔まわりだけクセが気になる。縮毛矯正の範囲をどう相談する？
     keywords:
