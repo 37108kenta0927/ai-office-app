@@ -127,7 +127,7 @@ topics:
     intent: 伸びた根元への施術範囲を相談したい再来店層。色持ちケアとは分離。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
-    status: pending
+    status: drafted
   - id: onexone-hair-leave-bleach
     title: ブリーチをやめたいとき、暗く染める前に考えたいこと
     keywords:
