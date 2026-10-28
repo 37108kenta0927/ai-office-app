@@ -89,7 +89,7 @@ topics:
     intent: 全体施術が必要か迷う人。部分施術メニューの提供可否は確認してから案内。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
-    status: pending
+    status: drafted
   - id: horizon-hair-straight-color-sequence
     title: 縮毛矯正とカラー、どちらを先に相談する？施術履歴を伝えるポイント
     keywords:
