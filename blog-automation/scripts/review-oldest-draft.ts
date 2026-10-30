@@ -64,7 +64,12 @@ async function assessCurrentCopy(input: { brandName: string; title: string; cont
   const tool = response.content.find((item): item is Anthropic.ToolUseBlock => item.type === "tool_use");
   if (!tool) throw new Error("reviewer did not return a publication decision");
   const decision = tool.input as Decision;
-  if ((decision.decision !== "publish" && decision.decision !== "hold") || !decision.reason.trim()) {
+  if (
+    (decision.decision !== "publish" && decision.decision !== "hold") ||
+    !decision.reason.trim() ||
+    !decision.title.trim() ||
+    !decision.content.trim()
+  ) {
     throw new Error("reviewer returned an invalid decision");
   }
   return decision;
@@ -102,6 +107,9 @@ async function main() {
   // Re-read status immediately before writing so a concurrent/manual publish cannot be overwritten.
   const beforeWrite = await getPost(brand, current.id);
   if (beforeWrite.status !== "draft") throw new Error(`WP post #${current.id} changed to ${beforeWrite.status}; stopping`);
+  if (beforeWrite.modified_gmt !== current.modified_gmt || currentText(beforeWrite.content) !== currentText(current.content)) {
+    throw new Error(`WP post #${current.id} was edited during review; stopping without overwrite`);
+  }
   await updatePostCopy(brand, current.id, { title: decision.title, content: decision.content, excerpt: decision.excerpt });
   const published = await publishPost(brand, current.id);
   markTopicStatus(brand, candidate.marker.topicId, "published");
