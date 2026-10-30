@@ -98,7 +98,7 @@ topics:
     intent: 両施術の予定を組みたい人。順序や間隔を一律に指定しない。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
-    status: pending
+    status: drafted
   - id: horizon-hair-bleached-straight-consult
     title: ブリーチ履歴があっても縮毛矯正を相談できる？予約前に伝えたいこと
     keywords:
