@@ -201,17 +201,25 @@ export async function createDraftPost(
 
 export async function publishPost(
   brand: BrandConfig,
-  wpPostId: number
-): Promise<{ link: string }> {
-  const updated = await wpFetch<{ link: string }>(
+  wpPostId: number,
+  publishedAt = new Date()
+): Promise<{ link: string; status: string; date_gmt: string | null }> {
+  // WordPress otherwise preserves the draft timestamp on some installations.
+  // Set an explicit UTC publication time so chronological listings and the
+  // JST one-post-per-day gate use the same publication event.
+  const dateGmt = publishedAt.toISOString().replace(/\.\d{3}Z$/, "");
+  const updated = await wpFetch<{ link: string; status: string; date_gmt: string | null }>(
     brand,
     `/posts/${wpPostId}`,
     {
       method: "POST",
-      body: JSON.stringify({ status: "publish" }),
+      body: JSON.stringify({ status: "publish", date_gmt: dateGmt }),
     }
   );
-  return { link: updated.link };
+  if (updated.status !== "publish" || !updated.date_gmt) {
+    throw new Error(`WordPress did not confirm publication for post #${wpPostId}`);
+  }
+  return updated;
 }
 
 export interface WordPressPost {

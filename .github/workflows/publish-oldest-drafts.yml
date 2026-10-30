@@ -1,18 +1,11 @@
 name: Blog - Publish Oldest Reviewed Drafts
 
-# Deliberately manual-only. The parent scheduler invokes this once per JST day;
-# do not add a cron here or it could create a second publishing schedule.
+# Manual-only; the parent scheduler invokes this. Do not add a second cron.
 on:
   workflow_dispatch:
     inputs:
-      brand:
-        description: Brand to publish (or all for one oldest draft per brand)
-        required: false
-        default: all
-        type: choice
-        options: [all, onexone-hair, horizon-hair]
       dry_run:
-        description: Review and report only; never write WordPress, Issues, or topic status
+        description: Review only; never write WordPress, Issues, or topic status
         required: true
         default: true
         type: boolean
@@ -21,17 +14,13 @@ permissions:
   contents: write
   issues: write
 
+concurrency:
+  group: blog-publication-queue
+  cancel-in-progress: false
+
 jobs:
   publish:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      max-parallel: 1
-      matrix:
-        brand: [onexone-hair, horizon-hair]
-    concurrency:
-      group: daily-blog-publish-${{ matrix.brand }}
-      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -40,21 +29,28 @@ jobs:
       - name: Install dependencies
         working-directory: blog-automation
         run: npm ci
-      - name: Review and publish the oldest safe draft
-        if: ${{ inputs.brand == 'all' || inputs.brand == matrix.brand }}
+      - name: Review both brand queues sequentially
         working-directory: blog-automation
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY_BLOG }}
           WP_APP_PASSWORD_ONEXONE_HAIR: ${{ secrets.WP_APP_PASSWORD_ONEXONE_HAIR }}
           WP_APP_PASSWORD_HORIZON_HAIR: ${{ secrets.WP_APP_PASSWORD_HORIZON_HAIR }}
-        run: npx tsx scripts/review-oldest-draft.ts --brand ${{ matrix.brand }} ${{ inputs.dry_run && '--dry-run' || '' }}
-      - name: Commit topic status update
-        if: ${{ (inputs.brand == 'all' || inputs.brand == matrix.brand) && !inputs.dry_run }}
+        run: |
+          FLAGS=""
+          if [ "${{ inputs.dry_run }}" = "true" ]; then FLAGS="--dry-run"; fi
+          npx tsx scripts/review-oldest-draft.ts --brand onexone-hair $FLAGS
+          npx tsx scripts/review-oldest-draft.ts --brand horizon-hair $FLAGS
+      - name: Commit topic status updates
+        if: ${{ !inputs.dry_run }}
         run: |
           git config user.name "blog-automation-bot"
           git config user.email "actions@users.noreply.github.com"
           git add blog-automation/content/topics/
           git diff --cached --quiet && exit 0
-          git commit -m "chore(blog): record daily reviewed publication for ${{ matrix.brand }}"
-          git push
+          git commit -m "chore(blog): record daily reviewed publications"
+          for i in 1 2 3; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push && exit 0
+            sleep $((RANDOM % 5 + 1))
+          done
+          exit 1

@@ -13,6 +13,10 @@ function getArg(name: string): string {
 }
 
 async function main() {
+  throw new Error(
+    "Direct Issue approval is disabled. Use the guarded daily queue command so JST limits and current-draft review cannot be bypassed."
+  );
+
   const issueNumber = Number(getArg("issue"));
   const client = octokit();
   const { owner, repo } = repoContext();

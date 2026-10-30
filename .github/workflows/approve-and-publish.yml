@@ -1,4 +1,4 @@
-name: Blog - Approve and Publish
+name: Blog - Daily Queue Command
 
 on:
   issue_comment:
@@ -8,42 +8,51 @@ permissions:
   contents: write
   issues: write
 
+concurrency:
+  group: blog-publication-queue
+  cancel-in-progress: false
+
 jobs:
-  publish:
+  daily-queue:
+    # Require exact command, exact fixed operations issue, and exact owner login.
+    # Repository variables must be set only after the dedicated issue exists:
+    # BLOG_DAILY_OPERATIONS_ISSUE and BLOG_DAILY_OWNER_LOGIN.
     if: >
-      contains(github.event.issue.labels.*.name, 'blog-review') &&
-      (contains(github.event.comment.body, 'おけ') || contains(github.event.comment.body, '/publish'))
+      github.event.issue.pull_request == null &&
+      github.event.issue.number == vars.BLOG_DAILY_OPERATIONS_ISSUE &&
+      github.event.sender.login == vars.BLOG_DAILY_OWNER_LOGIN &&
+      (github.event.comment.body == '/blog-daily-dry-run' || github.event.comment.body == '/blog-daily-publish')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-
       - name: Install dependencies
         working-directory: blog-automation
         run: npm ci
-
-      - name: Publish approved post
+      - name: Run only the requested queue command
         working-directory: blog-automation
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # 追加ブランド分は同様に1行ずつ追記する
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY_BLOG }}
           WP_APP_PASSWORD_ONEXONE_HAIR: ${{ secrets.WP_APP_PASSWORD_ONEXONE_HAIR }}
           WP_APP_PASSWORD_HORIZON_HAIR: ${{ secrets.WP_APP_PASSWORD_HORIZON_HAIR }}
-        run: npx tsx scripts/approve-publish.ts --issue ${{ github.event.issue.number }}
-
-      - name: Commit topic status update
+        run: |
+          FLAGS=""
+          if [ "${{ github.event.comment.body }}" = "/blog-daily-dry-run" ]; then FLAGS="--dry-run"; fi
+          npx tsx scripts/review-oldest-draft.ts --brand onexone-hair $FLAGS
+          npx tsx scripts/review-oldest-draft.ts --brand horizon-hair $FLAGS
+      - name: Commit topic status updates
+        if: ${{ github.event.comment.body == '/blog-daily-publish' }}
         run: |
           git config user.name "blog-automation-bot"
           git config user.email "actions@users.noreply.github.com"
           git add blog-automation/content/topics/
           git diff --cached --quiet && exit 0
-          git commit -m "chore(blog): mark topic published (issue #${{ github.event.issue.number }})"
-          for i in 1 2 3 4 5; do
-            git push && exit 0
-            git pull --rebase origin "${GITHUB_REF_NAME}"
+          git commit -m "chore(blog): record daily reviewed publications"
+          for i in 1 2 3; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push && exit 0
             sleep $((RANDOM % 5 + 1))
           done
-          git push
+          exit 1
