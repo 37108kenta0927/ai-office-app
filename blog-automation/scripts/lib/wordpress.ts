@@ -232,6 +232,7 @@ export interface WordPressPost {
   content: { raw?: string; rendered?: string };
   excerpt: { raw?: string; rendered?: string };
   meta?: Record<string, unknown>;
+  yoast_head_json?: Record<string, unknown>;
 }
 
 /** Fetch the current WordPress copy. Never rely on an old Issue preview. */

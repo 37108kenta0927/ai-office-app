@@ -21,9 +21,7 @@ function validate(brand: ReturnType<typeof loadBrand>, d: Decision): string | nu
   if (/<\/?(?:script|iframe)\b|\son\w+\s*=/i.test(d.content)) return "revised copy contains unsafe HTML";
   return null;
 }
-function validateMetadata(meta: Record<string, unknown> | undefined, title: string, excerpt: string): string | null {
-  const raw = meta?.blog_automation_json_ld;
-  if (typeof raw !== "string") return "SEO meta/JSON-LD cannot be read for verification";
+function validateJsonLd(raw: string, title: string, excerpt: string): string | null {
   try {
     const values = JSON.parse(raw) as unknown;
     if (!Array.isArray(values) || values.length === 0) return "JSON-LD is missing or malformed";
@@ -31,6 +29,25 @@ function validateMetadata(meta: Record<string, unknown> | undefined, title: stri
     if (!article || article.headline !== title || (article.description !== undefined && article.description !== excerpt)) return "JSON-LD headline/description does not match current copy";
   } catch { return "JSON-LD cannot be parsed"; }
   return null;
+}
+function validateMetadata(meta: Record<string, unknown> | undefined, content: string, title: string, excerpt: string): string | null {
+  const stored = meta?.blog_automation_json_ld;
+  if (typeof stored === "string") return validateJsonLd(stored, title, excerpt);
+  // Some sites intentionally do not expose arbitrary post meta over REST. In
+  // that case inspect any structured data that is actually in the current body;
+  // absence is diagnostic, not by itself a reason to hold every old draft.
+  const embedded = [...content.matchAll(/<script[^>]+application\/ld\+json[^>]*>([\s\S]*?)<\/script>/gi)];
+  for (const item of embedded) {
+    const problem = validateJsonLd(item[1], title, excerpt);
+    if (problem) return problem;
+  }
+  return null;
+}
+function metadataDiagnostics(post: { meta?: Record<string, unknown>; yoast_head_json?: Record<string, unknown> }, content: string): string {
+  const metaKeys = Object.keys(post.meta ?? {}).sort().join(",") || "none";
+  const yoastKeys = Object.keys(post.yoast_head_json ?? {}).sort().join(",") || "none";
+  const embedded = [...content.matchAll(/<script[^>]+application\/ld\+json[^>]*>/gi)].length;
+  return `metaKeys=${metaKeys}; yoastKeys=${yoastKeys}; embeddedJsonLd=${embedded}`;
 }
 function jstDay(value: string): string { const d = new Date(value); return new Date(d.getTime() + 9 * 3600_000).toISOString().slice(0, 10); }
 async function candidates(brandId: string): Promise<Candidate[]> {
@@ -77,7 +94,8 @@ async function main() {
     const current = await getPost(brand, candidate.marker.wpPostId);
     if (current.status === "publish") { console.log(`[daily-publish] #${current.id} already published; skip`); if (!dryRun) { await note(candidate.number, `Already published: ${current.link}. Closed without republishing.`, true); markTopicStatus(brand, candidate.marker.topicId, "published"); } continue; }
     if (current.status !== "draft") { console.log(`[daily-publish] #${current.id} status=${current.status}; skip`); if (!dryRun) await note(candidate.number, `Skipped: current WordPress status is ${current.status}; not published.`); continue; }
-    const metadataProblem = validateMetadata(current.meta, text(current.title), text(current.excerpt));
+    const metadataProblem = validateMetadata(current.meta, text(current.content), text(current.title), text(current.excerpt));
+    if (dryRun) console.log(`[daily-publish] metadata diagnostic for WP #${current.id}: ${metadataDiagnostics(current, text(current.content))}`);
     if (metadataProblem) {
       console.log(`[daily-publish] issue #${candidate.number}, WP #${current.id}, hold: ${metadataProblem}`);
       if (!dryRun) await note(candidate.number, `Held for fact check; not published. Reason: ${metadataProblem}`);
