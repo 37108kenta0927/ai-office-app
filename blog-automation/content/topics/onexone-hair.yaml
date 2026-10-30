@@ -136,7 +136,7 @@ topics:
     intent: 明るさを落として継続施術から離れたい人。将来明るく戻す希望も確認。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
-    status: pending
+    status: drafted
   - id: onexone-hair-inner-work-visibility
     title: 職場では控えめ、休日は楽しむ。インナーカラーの見え方を相談するコツ
     keywords:
