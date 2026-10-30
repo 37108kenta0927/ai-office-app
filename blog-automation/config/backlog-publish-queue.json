@@ -1,0 +1,18 @@
+{
+  "description": "2026-10-31 時点で承認された既存下書きのみ。新規生成分は追加しない。",
+  "onexone-hair": [
+    { "issue": 15, "wpPost": 681 }, { "issue": 24, "wpPost": 687 },
+    { "issue": 25, "wpPost": 690 }, { "issue": 31, "wpPost": 693 },
+    { "issue": 33, "wpPost": 696 }, { "issue": 39, "wpPost": 699 },
+    { "issue": 40, "wpPost": 702 }, { "issue": 41, "wpPost": 705 },
+    { "issue": 46, "wpPost": 708 }, { "issue": 48, "wpPost": 711 },
+    { "issue": 54, "wpPost": 714 }, { "issue": 56, "wpPost": 717 }
+  ],
+  "horizon-hair": [
+    { "issue": 14, "wpPost": 840 }, { "issue": 16, "wpPost": 843 },
+    { "issue": 26, "wpPost": 852 }, { "issue": 32, "wpPost": 855 },
+    { "issue": 34, "wpPost": 858 }, { "issue": 47, "wpPost": 861 },
+    { "issue": 49, "wpPost": 864 }, { "issue": 55, "wpPost": 867 },
+    { "issue": 57, "wpPost": 870 }
+  ]
+}

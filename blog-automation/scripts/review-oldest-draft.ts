@@ -1,9 +1,11 @@
 import Anthropic from "@anthropic-ai/sdk";
+import backlog from "../config/backlog-publish-queue.json" with { type: "json" };
 import { loadBrand, markTopicStatus } from "./lib/config.js";
 import { octokit, parseMarker, repoContext, type DraftMarker } from "./lib/github.js";
 import { getPost, hasPublishedSince, publishPost, updatePostCopy } from "./lib/wordpress.js";
 
 type Candidate = { number: number; marker: DraftMarker; reviewBody: string };
+type QueueEntry = { issue: number; wpPost: number };
 type Decision = { decision: "publish" | "hold"; reason: string; title: string; content: string; excerpt: string };
 const MIN_TEXT_LENGTH = 800;
 const START_AT_JST = Date.UTC(2026, 9, 31, 15);
@@ -31,9 +33,24 @@ function validateMetadata(meta: Record<string, unknown> | undefined, title: stri
 }
 function jstDay(value: string): string { const d = new Date(value); return new Date(d.getTime() + 9 * 3600_000).toISOString().slice(0, 10); }
 async function candidates(brandId: string): Promise<Candidate[]> {
+  const allowed = (backlog as unknown as Record<string, QueueEntry[]>)[brandId];
+  if (!allowed) throw new Error(`no fixed backlog queue configured for ${brandId}`);
   const client = octokit(); const { owner, repo } = repoContext();
   const issues = await client.paginate(client.issues.listForRepo, { owner, repo, state: "open", labels: "blog-review", per_page: 100, direction: "asc", sort: "created" });
-  return issues.flatMap((issue) => { if (issue.pull_request) return []; try { const marker = parseMarker(issue.body ?? ""); return marker.brandId === brandId ? [{ number: issue.number, marker, reviewBody: issue.body ?? "" }] : []; } catch { return []; } });
+  const byIssue = new Map(issues.map((issue) => [issue.number, issue]));
+  return allowed.flatMap(({ issue: issueNumber, wpPost }) => {
+    const issue = byIssue.get(issueNumber);
+    if (!issue || issue.pull_request) return [];
+    try {
+      const marker = parseMarker(issue.body ?? "");
+      if (marker.brandId !== brandId || marker.wpPostId !== wpPost) {
+        throw new Error(`backlog marker mismatch for issue #${issueNumber}`);
+      }
+      return [{ number: issue.number, marker, reviewBody: issue.body ?? "" }];
+    } catch (error) {
+      throw new Error(`fixed backlog validation failed for issue #${issueNumber}: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  });
 }
 async function assess(brand: ReturnType<typeof loadBrand>, candidate: Candidate, title: string, content: string, excerpt: string): Promise<Decision> {
   const apiKey = process.env.ANTHROPIC_API_KEY; if (!apiKey) throw new Error("ANTHROPIC_API_KEY is not set");

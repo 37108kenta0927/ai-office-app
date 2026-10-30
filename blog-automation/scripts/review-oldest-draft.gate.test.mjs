@@ -3,6 +3,8 @@ import { readFileSync } from "node:fs";
 
 const source = readFileSync(new URL("./review-oldest-draft.ts", import.meta.url), "utf8");
 assert.match(source, /START_AT_JST/, "must enforce the requested start date");
+assert.match(source, /backlog-publish-queue\.json/, "must use the fixed backlog queue");
+assert.match(source, /marker\.wpPostId !== wpPost/, "must match the Issue marker to the fixed WordPress ID");
 assert.match(source, /hasPublishedSince/, "must enforce one post per brand/JST day");
 assert.match(source, /MIN_TEXT_LENGTH = 800/, "must retain the minimum-copy gate");
 assert.match(source, /booking CTA/, "must retain the booking CTA gate");
