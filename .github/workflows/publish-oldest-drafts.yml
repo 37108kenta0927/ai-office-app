@@ -39,8 +39,10 @@ jobs:
         run: |
           FLAGS=""
           if [ "${{ inputs.dry_run }}" = "true" ]; then FLAGS="--dry-run"; fi
-          npx tsx scripts/review-oldest-draft.ts --brand onexone-hair $FLAGS
-          npx tsx scripts/review-oldest-draft.ts --brand horizon-hair $FLAGS
+          RESULT=0
+          npx tsx scripts/review-oldest-draft.ts --brand onexone-hair $FLAGS || RESULT=1
+          npx tsx scripts/review-oldest-draft.ts --brand horizon-hair $FLAGS || RESULT=1
+          exit $RESULT
       - name: Commit topic status updates
         if: ${{ !inputs.dry_run }}
         run: |

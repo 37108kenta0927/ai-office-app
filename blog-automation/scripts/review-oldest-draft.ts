@@ -18,6 +18,18 @@ function validate(brand: ReturnType<typeof loadBrand>, d: Decision): string | nu
   if (/javascript:|data:text\/html/i.test(d.content)) return "revised copy contains an unsafe link";
   return null;
 }
+function validateMetadata(meta: Record<string, unknown> | undefined, title: string, excerpt: string): string | null {
+  const raw = meta?.blog_automation_json_ld;
+  if (typeof raw !== "string") return "SEO meta/JSON-LD cannot be read for verification";
+  try {
+    const values = JSON.parse(raw) as unknown;
+    if (!Array.isArray(values) || values.length === 0) return "JSON-LD is missing or malformed";
+    const article = values.find((value): value is Record<string, unknown> => typeof value === "object" && value !== null && (value as Record<string, unknown>)["@type"] === "Article");
+    if (!article || article.headline !== title || (article.description !== undefined && article.description !== excerpt)) return "JSON-LD headline/description does not match current copy";
+  } catch { return "JSON-LD cannot be parsed"; }
+  return null;
+}
+function jstDay(value: string): string { const d = new Date(value); return new Date(d.getTime() + 9 * 3600_000).toISOString().slice(0, 10); }
 async function candidates(brandId: string): Promise<Candidate[]> {
   const client = octokit(); const { owner, repo } = repoContext();
   const issues = await client.paginate(client.issues.listForRepo, { owner, repo, state: "open", labels: "blog-review", per_page: 100, direction: "asc", sort: "created" });
@@ -43,13 +55,16 @@ async function main() {
     const current = await getPost(brand, candidate.marker.wpPostId);
     if (current.status === "publish") { console.log(`[daily-publish] #${current.id} already published; skip`); if (!dryRun) { await note(candidate.number, `Already published: ${current.link}. Closed without republishing.`, true); markTopicStatus(brand, candidate.marker.topicId, "published"); } continue; }
     if (current.status !== "draft") { console.log(`[daily-publish] #${current.id} status=${current.status}; skip`); if (!dryRun) await note(candidate.number, `Skipped: current WordPress status is ${current.status}; not published.`); continue; }
-    const decision = await assess(brand, candidate, text(current.title), text(current.content), text(current.excerpt)); const invalid = decision.decision === "publish" ? validate(brand, decision) : null;
+    const metadataProblem = validateMetadata(current.meta, text(current.title), text(current.excerpt));
+    const decision = await assess(brand, candidate, text(current.title), text(current.content), text(current.excerpt));
+    const titleOrExcerptChanged = decision.title !== text(current.title) || decision.excerpt !== text(current.excerpt);
+    const invalid = decision.decision === "publish" ? (metadataProblem ?? validate(brand, decision) ?? (titleOrExcerptChanged ? "title or excerpt edit would desynchronise verified SEO metadata" : null)) : null;
     console.log(`[daily-publish] issue #${candidate.number}, WP #${current.id}, ${decision.decision}: ${invalid ?? decision.reason}`);
-    if (dryRun) return;
+    if (dryRun) { if (decision.decision === "hold" || invalid) continue; return; }
     if (decision.decision === "hold" || invalid) { await note(candidate.number, `Held for fact check; not published. Reason: ${invalid ?? decision.reason}`); continue; }
     const before = await getPost(brand, current.id); if (before.status !== "draft" || before.modified_gmt !== current.modified_gmt || text(before.content) !== text(current.content)) throw new Error(`WP post #${current.id} changed during review; stopping`);
     await updatePostCopy(brand, current.id, { title: decision.title, content: decision.content, excerpt: decision.excerpt }); const published = await publishPost(brand, current.id); const verified = await getPost(brand, current.id);
-    if (verified.status !== "publish" || !verified.date_gmt || verified.link !== published.link) throw new Error(`WP post #${current.id} publication could not be verified; stopping`);
+    if (verified.status !== "publish" || !verified.date_gmt || verified.link !== published.link || jstDay(verified.date_gmt) !== jstDay(new Date().toISOString())) throw new Error(`WP post #${current.id} publication could not be verified; stopping`);
     markTopicStatus(brand, candidate.marker.topicId, "published"); await note(candidate.number, `Published after current-draft safety review: ${verified.link} (UTC publication time: ${verified.date_gmt}).`, true); console.log(`[daily-publish] published ${verified.link}`); return;
   }
   console.log(`[daily-publish] no safe draft available for ${brand.id}`);

@@ -15,12 +15,10 @@ concurrency:
 jobs:
   daily-queue:
     # Require exact command, exact fixed operations issue, and exact owner login.
-    # Repository variables must be set only after the dedicated issue exists:
-    # BLOG_DAILY_OPERATIONS_ISSUE and BLOG_DAILY_OWNER_LOGIN.
     if: >
       github.event.issue.pull_request == null &&
-      github.event.issue.number == vars.BLOG_DAILY_OPERATIONS_ISSUE &&
-      github.event.sender.login == vars.BLOG_DAILY_OWNER_LOGIN &&
+      github.event.issue.number == 58 &&
+      github.event.sender.login == '37108kenta0927' &&
       (github.event.comment.body == '/blog-daily-dry-run' || github.event.comment.body == '/blog-daily-publish')
     runs-on: ubuntu-latest
     steps:
@@ -41,8 +39,10 @@ jobs:
         run: |
           FLAGS=""
           if [ "${{ github.event.comment.body }}" = "/blog-daily-dry-run" ]; then FLAGS="--dry-run"; fi
-          npx tsx scripts/review-oldest-draft.ts --brand onexone-hair $FLAGS
-          npx tsx scripts/review-oldest-draft.ts --brand horizon-hair $FLAGS
+          RESULT=0
+          npx tsx scripts/review-oldest-draft.ts --brand onexone-hair $FLAGS || RESULT=1
+          npx tsx scripts/review-oldest-draft.ts --brand horizon-hair $FLAGS || RESULT=1
+          exit $RESULT
       - name: Commit topic status updates
         if: ${{ github.event.comment.body == '/blog-daily-publish' }}
         run: |

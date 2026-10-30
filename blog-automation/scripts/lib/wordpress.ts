@@ -231,6 +231,7 @@ export interface WordPressPost {
   title: { raw?: string; rendered?: string };
   content: { raw?: string; rendered?: string };
   excerpt: { raw?: string; rendered?: string };
+  meta?: Record<string, unknown>;
 }
 
 /** Fetch the current WordPress copy. Never rely on an old Issue preview. */
