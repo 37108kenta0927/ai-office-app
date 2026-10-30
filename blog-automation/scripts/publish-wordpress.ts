@@ -35,6 +35,10 @@ function reviewItemCount(value: unknown): string | number {
 }
 
 function isEligibleForAutoPublish(post: GeneratedPost): boolean {
+  // Publishing is intentionally disabled in the generation workflow. The
+  // manual daily queue performs a fresh review and enforces its JST limit.
+  return false;
+
   // Generated JSON is untrusted at runtime. Missing, non-array, or blank
   // review values must never be interpreted as a clean review.
   if (!isStringArray(post.riskFlags) || !isStringArray(post.qualityIssues)) {

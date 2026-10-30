@@ -213,3 +213,39 @@ export async function publishPost(
   );
   return { link: updated.link };
 }
+
+export interface WordPressPost {
+  id: number;
+  status: string;
+  date_gmt: string | null;
+  modified_gmt: string | null;
+  link: string;
+  title: { raw?: string; rendered?: string };
+  content: { raw?: string; rendered?: string };
+  excerpt: { raw?: string; rendered?: string };
+}
+
+/** Fetch the current WordPress copy. Never rely on an old Issue preview. */
+export async function getPost(brand: BrandConfig, wpPostId: number): Promise<WordPressPost> {
+  return wpFetch<WordPressPost>(brand, `/posts/${wpPostId}?context=edit`);
+}
+
+export async function updatePostCopy(
+  brand: BrandConfig,
+  wpPostId: number,
+  copy: { title?: string; content?: string; excerpt?: string }
+): Promise<WordPressPost> {
+  return wpFetch<WordPressPost>(brand, `/posts/${wpPostId}`, {
+    method: "POST",
+    body: JSON.stringify(copy),
+  });
+}
+
+/** A brand may publish at most one post in a Japan calendar day. */
+export async function hasPublishedSince(brand: BrandConfig, afterUtc: string): Promise<boolean> {
+  const posts = await wpFetch<WordPressPost[]>(
+    brand,
+    `/posts?status=publish&after=${encodeURIComponent(afterUtc)}&per_page=1&context=edit`
+  );
+  return posts.length > 0;
+}

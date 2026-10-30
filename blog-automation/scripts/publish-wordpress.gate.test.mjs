@@ -35,7 +35,7 @@ function postWith(riskFlags, qualityIssues, bodyLength = 800) {
   return { bodyMarkdown: "x".repeat(bodyLength), riskFlags, qualityIssues };
 }
 
-assert.equal(eligible(postWith([], [])), true, "empty arrays pass");
+assert.equal(eligible(postWith([], [])), false, "generation never auto-publishes");
 assert.equal(
   eligible(postWith(["verified issue"], [])),
   false,
@@ -47,6 +47,6 @@ assert.equal(eligible(postWith(undefined, [])), false, "missing values fail clos
 assert.equal(eligible(postWith([], undefined)), false, "missing quality issues fail closed");
 assert.equal(eligible(postWith([" "], [])), false, "blank string elements fail closed");
 assert.equal(eligible(postWith([], [], 799)), false, "799 characters hold publication");
-assert.equal(eligible(postWith([], [], 800)), true, "800 characters pass");
+assert.equal(eligible(postWith([], [], 800)), false, "generation never auto-publishes");
 
 console.log("publish-wordpress eligibility tests passed");
