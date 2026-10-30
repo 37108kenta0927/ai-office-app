@@ -9,6 +9,9 @@ assert.match(source, /hasPublishedSince/, "must enforce one post per brand/JST d
 assert.match(source, /MIN_TEXT_LENGTH = 800/, "must retain the minimum-copy gate");
 assert.match(source, /booking CTA/, "must retain the booking CTA gate");
 assert.match(source, /validateMetadata/, "must verify readable SEO meta and JSON-LD");
+assert.match(source, /if \(metadataProblem\).*continue/s, "must skip invalid metadata before calling the reviewer");
+assert.match(source, /Preserve title and excerpt EXACTLY/, "must request body-only edits");
+assert.match(source, /script\|iframe/, "must reject unsafe HTML");
 assert.match(source, /jstDay\(verified\.date_gmt\)/, "must verify the publication date is today in JST");
 assert.match(source, /const verified = await getPost/, "must verify the post after publication");
 assert.match(source, /decision\.decision === "hold".*continue/s, "held items must not block a later safe candidate");

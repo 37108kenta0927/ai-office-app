@@ -18,6 +18,7 @@ function validate(brand: ReturnType<typeof loadBrand>, d: Decision): string | nu
   if (!d.title.trim() || plain(d.content).length < MIN_TEXT_LENGTH) return `revised copy is shorter than ${MIN_TEXT_LENGTH} characters`;
   if (!d.content.includes(brand.bookingUrl)) return "revised copy is missing the existing booking CTA";
   if (/javascript:|data:text\/html/i.test(d.content)) return "revised copy contains an unsafe link";
+  if (/<\/?(?:script|iframe)\b|\son\w+\s*=/i.test(d.content)) return "revised copy contains unsafe HTML";
   return null;
 }
 function validateMetadata(meta: Record<string, unknown> | undefined, title: string, excerpt: string): string | null {
@@ -57,10 +58,14 @@ async function assess(brand: ReturnType<typeof loadBrand>, candidate: Candidate,
   const facts = `${brand.name}; site=${brand.siteUrl}; categories=${brand.categories.join(", ")}; location=${brand.location?.city ?? "not verified"}`;
   const response = await new Anthropic({ apiKey }).messages.create({ model: "claude-sonnet-5", max_tokens: 4000,
     tools: [{ name: "submit_publication_decision", description: "Return a safe decision for current WordPress copy.", input_schema: { type: "object", properties: { decision: { type: "string", enum: ["publish", "hold"] }, reason: { type: "string" }, title: { type: "string" }, content: { type: "string" }, excerpt: { type: "string" } }, required: ["decision", "reason", "title", "content", "excerpt"] } }], tool_choice: { type: "tool", name: "submit_publication_decision" },
-    messages: [{ role: "user", content: `Final safety review. Current WordPress content is authoritative; old ticket is concern context only. Verified brand facts: ${facts}. Never invent prices, customer experiences, results, staff, services, availability, policy, or structured-data facts. Remove unsupported claims or hold for fact check. Positive observations are not concerns. Keep title/excerpt/HTML/JSON-LD claims consistent and preserve booking CTA exactly. Return HTML.\n\nOLD TICKET:\n${candidate.reviewBody}\n\nTITLE:\n${title}\n\nEXCERPT:\n${excerpt}\n\nCURRENT HTML:\n${content}` }],
+    messages: [{ role: "user", content: `Final safety review. Current WordPress content is authoritative; old ticket is concern context only. Verified brand facts: ${facts}. Never invent prices, customer experiences, results, staff, services, availability, policy, or structured-data facts. Remove unsupported claims or hold for fact check. Positive observations are not concerns. Preserve title and excerpt EXACTLY; make conservative edits to HTML body only. Keep title/excerpt/HTML/JSON-LD claims consistent and preserve booking CTA exactly. Return HTML.\n\nOLD TICKET:\n${candidate.reviewBody}\n\nTITLE:\n${title}\n\nEXCERPT:\n${excerpt}\n\nCURRENT HTML:\n${content}` }],
   });
   const tool = response.content.find((item): item is Anthropic.ToolUseBlock => item.type === "tool_use"); if (!tool) throw new Error("reviewer did not return a decision");
-  const d = tool.input as Decision; if (!(["publish", "hold"] as string[]).includes(d.decision) || !d.reason?.trim()) throw new Error("invalid review decision"); return d;
+  const d = tool.input;
+  if (!d || typeof d !== "object") throw new Error("invalid review decision type");
+  const value = d as Partial<Decision>;
+  if ((value.decision !== "publish" && value.decision !== "hold") || typeof value.reason !== "string" || typeof value.title !== "string" || typeof value.content !== "string" || typeof value.excerpt !== "string" || !value.reason.trim()) throw new Error("invalid review decision");
+  return value as Decision;
 }
 async function note(issue: number, body: string, close = false) { const client = octokit(); const { owner, repo } = repoContext(); await client.issues.createComment({ owner, repo, issue_number: issue, body }); if (close) await client.issues.update({ owner, repo, issue_number: issue, state: "closed" }); }
 
@@ -73,9 +78,14 @@ async function main() {
     if (current.status === "publish") { console.log(`[daily-publish] #${current.id} already published; skip`); if (!dryRun) { await note(candidate.number, `Already published: ${current.link}. Closed without republishing.`, true); markTopicStatus(brand, candidate.marker.topicId, "published"); } continue; }
     if (current.status !== "draft") { console.log(`[daily-publish] #${current.id} status=${current.status}; skip`); if (!dryRun) await note(candidate.number, `Skipped: current WordPress status is ${current.status}; not published.`); continue; }
     const metadataProblem = validateMetadata(current.meta, text(current.title), text(current.excerpt));
+    if (metadataProblem) {
+      console.log(`[daily-publish] issue #${candidate.number}, WP #${current.id}, hold: ${metadataProblem}`);
+      if (!dryRun) await note(candidate.number, `Held for fact check; not published. Reason: ${metadataProblem}`);
+      continue;
+    }
     const decision = await assess(brand, candidate, text(current.title), text(current.content), text(current.excerpt));
     const titleOrExcerptChanged = decision.title !== text(current.title) || decision.excerpt !== text(current.excerpt);
-    const invalid = decision.decision === "publish" ? (metadataProblem ?? validate(brand, decision) ?? (titleOrExcerptChanged ? "title or excerpt edit would desynchronise verified SEO metadata" : null)) : null;
+    const invalid = decision.decision === "publish" ? (validate(brand, decision) ?? (titleOrExcerptChanged ? "title or excerpt edit would desynchronise verified SEO metadata" : null)) : null;
     console.log(`[daily-publish] issue #${candidate.number}, WP #${current.id}, ${decision.decision}: ${invalid ?? decision.reason}`);
     if (dryRun) { if (decision.decision === "hold" || invalid) continue; return; }
     if (decision.decision === "hold" || invalid) { await note(candidate.number, `Held for fact check; not published. Reason: ${invalid ?? decision.reason}`); continue; }
