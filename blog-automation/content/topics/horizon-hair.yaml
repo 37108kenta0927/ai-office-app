@@ -107,7 +107,7 @@ topics:
     intent: ブリーチ済みの髪で矯正を考える人。施術可能と断言せず適否確認を主題にする。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
-    status: pending
+    status: drafted
   - id: horizon-hair-daily-iron-comparison
     title: 毎朝アイロンを使っている人へ。縮毛矯正を考えるときの比較ポイント
     keywords:
