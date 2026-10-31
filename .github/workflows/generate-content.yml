@@ -1,80 +1,13 @@
-name: Blog - Generate Content
+name: Blog - Generation Disabled
 
+# No schedule and no external AI/API call. Drafting/review occur in this chat.
 on:
-  schedule:
-    # 水・金・土 07:10 JST (UTC 22:10 前日) に生成(週3回)
-    # 毎時ちょうど(0分)はGitHub Actions側のスケジュール実行が混雑し遅延しやすいため、10分ずらしている
-    - cron: "10 22 * * 2,4,5"
   workflow_dispatch:
-    inputs:
-      brand:
-        description: "ブランドID（空なら全ブランド）"
-        required: false
 
-permissions:
-  contents: write
-  issues: write
+permissions: {}
 
 jobs:
-  generate:
+  disabled:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      # ブランド追加後、topics.yamlへの同時pushで衝突しないよう直列実行にする
-      max-parallel: 1
-      matrix:
-        brand: [onexone-hair, horizon-hair]
-        # 他ブランドを追加する場合はここに追記し、
-        # 下の env に対応する WP_APP_PASSWORD_<ID> を1行追加する
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Install dependencies
-        working-directory: blog-automation
-        run: npm ci
-
-      - name: Generate draft article
-        if: ${{ github.event.inputs.brand == '' || github.event.inputs.brand == matrix.brand }}
-        working-directory: blog-automation
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY_BLOG }}
-        run: npx tsx scripts/generate-post.ts --brand ${{ matrix.brand }}
-
-      - name: Create WordPress draft
-        if: ${{ github.event.inputs.brand == '' || github.event.inputs.brand == matrix.brand }}
-        working-directory: blog-automation
-        env:
-          WP_APP_PASSWORD_ONEXONE_HAIR: ${{ secrets.WP_APP_PASSWORD_ONEXONE_HAIR }}
-          WP_APP_PASSWORD_HORIZON_HAIR: ${{ secrets.WP_APP_PASSWORD_HORIZON_HAIR }}
-          # 未設定でもアイキャッチ画像なしで継続する(任意)
-          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
-        run: npx tsx scripts/publish-wordpress.ts --brand ${{ matrix.brand }}
-
-      - name: Open review issue
-        if: ${{ github.event.inputs.brand == '' || github.event.inputs.brand == matrix.brand }}
-        working-directory: blog-automation
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx tsx scripts/notify-review.ts --brand ${{ matrix.brand }}
-
-      - name: Commit topic status update
-        if: ${{ github.event.inputs.brand == '' || github.event.inputs.brand == matrix.brand }}
-        run: |
-          git config user.name "blog-automation-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add blog-automation/content/topics/ blog-automation/content/used-images/
-          git diff --cached --quiet && exit 0
-          git commit -m "chore(blog): mark topic drafted for ${{ matrix.brand }}"
-          # 同じワークフロー内の他ブランドのジョブが自分より先にpushしている場合、
-          # このジョブのチェックアウトは古いままなのでpushが拒否される。
-          # rebaseで取り込んでからリトライする(各ブランドは別ファイルを触るため衝突しない)。
-          for i in 1 2 3 4 5; do
-            git push && exit 0
-            git pull --rebase origin "${GITHUB_REF_NAME}"
-            sleep $((RANDOM % 5 + 1))
-          done
-          git push
+      - run: echo "Automated blog generation is disabled. Use approved payloads."
