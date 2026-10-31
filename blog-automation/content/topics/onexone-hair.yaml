@@ -145,7 +145,7 @@ topics:
     intent: 仕事の規定がある人。結ぶ・耳かけ時の露出範囲に絞り、絶対隠せるとは言わない。
     notes: 提供メニュー・料金・時間・対応可否は未確認のまま約束しない。効果・安全性を保証しない。
     seasonal: false
-    status: pending
+    status: drafted
   - id: onexone-hair-faded-yellow-orange
     title: ブリーチ後に髪が黄っぽい・オレンジっぽい。次のカラーで相談したいこと
     keywords:
