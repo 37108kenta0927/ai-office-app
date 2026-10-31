@@ -1,58 +1,14 @@
-name: Blog - Publish Oldest Reviewed Drafts
+name: Blog - Manual Queue Disabled
 
-# Manual-only; the parent scheduler invokes this. Do not add a second cron.
+# The fixed Issue #58 command is the only execution entrypoint. This prevents
+# a second path from bypassing approved-payload checks.
 on:
   workflow_dispatch:
-    inputs:
-      dry_run:
-        description: Review only; never write WordPress, Issues, or topic status
-        required: true
-        default: true
-        type: boolean
 
-permissions:
-  contents: write
-  issues: write
-
-concurrency:
-  group: blog-publication-queue
-  cancel-in-progress: false
+permissions: {}
 
 jobs:
-  publish:
+  disabled:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-      - name: Install dependencies
-        working-directory: blog-automation
-        run: npm ci
-      - name: Review both brand queues sequentially
-        working-directory: blog-automation
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY_BLOG }}
-          WP_APP_PASSWORD_ONEXONE_HAIR: ${{ secrets.WP_APP_PASSWORD_ONEXONE_HAIR }}
-          WP_APP_PASSWORD_HORIZON_HAIR: ${{ secrets.WP_APP_PASSWORD_HORIZON_HAIR }}
-        run: |
-          FLAGS=""
-          if [ "${{ inputs.dry_run }}" = "true" ]; then FLAGS="--dry-run"; fi
-          RESULT=0
-          npx tsx scripts/review-oldest-draft.ts --brand onexone-hair $FLAGS || RESULT=1
-          npx tsx scripts/review-oldest-draft.ts --brand horizon-hair $FLAGS || RESULT=1
-          exit $RESULT
-      - name: Commit topic status updates
-        if: ${{ !inputs.dry_run }}
-        run: |
-          git config user.name "blog-automation-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add blog-automation/content/topics/
-          git diff --cached --quiet && exit 0
-          git commit -m "chore(blog): record daily reviewed publications"
-          for i in 1 2 3; do
-            git pull --rebase origin "${GITHUB_REF_NAME}" && git push && exit 0
-            sleep $((RANDOM % 5 + 1))
-          done
-          exit 1
+      - run: echo "Use the guarded Issue #58 approved-payload command."

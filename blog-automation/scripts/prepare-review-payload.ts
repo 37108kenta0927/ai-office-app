@@ -15,7 +15,7 @@ async function main() {
     if (post.status !== "draft") continue;
     // This log contains editorial copy but never credentials. It is the exact
     // snapshot the chat must use when preparing an approved payload.
-    console.log(JSON.stringify({ brandId: brand.id, issueNumber: entry.issue, wpPostId: post.id, expectedModifiedGmt: post.modified_gmt, expectedContentSha256: hash(text(post.content)), title: text(post.title), excerpt: text(post.excerpt), content: text(post.content) }));
+    console.log(JSON.stringify({ brandId: brand.id, issueNumber: entry.issue, wpPostId: post.id, expectedModifiedGmt: post.modified_gmt, expectedContentSha256: hash(text(post.content)), expectedTitleSha256: hash(text(post.title)), expectedExcerptSha256: hash(text(post.excerpt)), title: text(post.title), excerpt: text(post.excerpt), content: text(post.content) }));
     return;
   }
   console.log(JSON.stringify({ brandId: brand.id, status: "no-draft-in-fixed-backlog" }));
