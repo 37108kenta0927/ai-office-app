@@ -19,7 +19,7 @@ jobs:
       github.event.issue.pull_request == null &&
       github.event.issue.number == 58 &&
       github.event.sender.login == '37108kenta0927' &&
-      (github.event.comment.body == '/blog-daily-dry-run' || github.event.comment.body == '/blog-daily-publish')
+      (github.event.comment.body == '/blog-daily-dry-run' || github.event.comment.body == '/blog-daily-publish' || github.event.comment.body == '/blog-payload-check')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -40,6 +40,9 @@ jobs:
           if [ "${{ github.event.comment.body }}" = "/blog-daily-dry-run" ]; then
             npx tsx scripts/prepare-review-payload.ts --brand onexone-hair || RESULT=1
             npx tsx scripts/prepare-review-payload.ts --brand horizon-hair || RESULT=1
+          elif [ "${{ github.event.comment.body }}" = "/blog-payload-check" ]; then
+            npx tsx scripts/publish-approved-payload.ts --brand onexone-hair --validate-only || RESULT=1
+            npx tsx scripts/publish-approved-payload.ts --brand horizon-hair --validate-only || RESULT=1
           else
             npx tsx scripts/publish-approved-payload.ts --brand onexone-hair || RESULT=1
             npx tsx scripts/publish-approved-payload.ts --brand horizon-hair || RESULT=1

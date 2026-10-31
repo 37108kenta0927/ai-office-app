@@ -12,9 +12,10 @@ function text(value: { raw?: string; rendered?: string }) { return value.raw ?? 
 function hash(value: string) { return createHash("sha256").update(value).digest("hex"); }
 function jstStart() { const n = new Date(Date.now() + 9 * 3600_000); return new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate()) - 9 * 3600_000).toISOString(); }
 function jstDay(value: string) { return new Date(new Date(value).getTime() + 9 * 3600_000).toISOString().slice(0, 10); }
-function safeHtml(content: string, bookingUrl: string) { return content.replace(/<[^>]*>/g, " ").trim().length >= 800 && content.includes(bookingUrl) && !/<\/?(?:script|iframe)\b|\son\w+\s*=|javascript:/i.test(content); }
+function safeHtml(content: unknown, bookingUrl: string) { return typeof content === "string" && content.replace(/<[^>]*>/g, " ").trim().length >= 800 && content.includes(bookingUrl) && !/<\/?(?:script|iframe)\b|\son\w+\s*=|javascript:|data:text\/html/i.test(content); }
 async function main() {
-  if (Date.now() < Date.UTC(2026, 9, 31, 15)) throw new Error("publishing is disabled until 2026-11-01 JST");
+  const validateOnly = process.argv.includes("--validate-only");
+  if (!validateOnly && Date.now() < Date.UTC(2026, 9, 31, 15)) throw new Error("publishing is disabled until 2026-11-01 JST");
   const brand = loadBrand(arg()); if (await hasPublishedSince(brand, jstStart())) return console.log("already published today (JST)");
   const dir = path.resolve(import.meta.dirname, "..", "content", "approved-payloads");
   const entries = (backlog as unknown as Record<string, { issue: number; wpPost: number }[]>)[brand.id] ?? [];
@@ -25,13 +26,14 @@ async function main() {
     const current = await getPost(brand, entry.wpPost);
     if (current.status === "publish") { if (!current.link) throw new Error(`published post #${current.id} has no URL`); continue; }
     if (current.status !== "draft" || current.modified_gmt !== payload.expectedModifiedGmt || hash(text(current.content)) !== payload.expectedContentSha256 || hash(text(current.title)) !== payload.expectedTitleSha256 || hash(text(current.excerpt)) !== payload.expectedExcerptSha256) throw new Error(`draft changed or unavailable for issue #${entry.issue}`);
-    await updatePostCopy(brand, current.id, { title: payload.title, excerpt: payload.excerpt, content: payload.content });
-    const result = await publishPost(brand, current.id); const verified = await getPost(brand, current.id);
-    if (verified.status !== "publish" || verified.link !== result.link || !verified.date_gmt || jstDay(verified.date_gmt) !== jstDay(new Date().toISOString())) throw new Error(`publication verification failed for #${current.id}`);
     const client = octokit(); const { owner, repo } = repoContext();
     const issue = await client.issues.get({ owner, repo, issue_number: entry.issue });
     const marker = parseMarker(issue.data.body ?? "");
     if (marker.brandId !== brand.id || marker.wpPostId !== current.id) throw new Error(`issue marker changed for #${entry.issue}`);
+    if (validateOnly) { console.log(`payload valid for issue #${entry.issue}`); return; }
+    await updatePostCopy(brand, current.id, { title: payload.title, excerpt: payload.excerpt, content: payload.content });
+    const result = await publishPost(brand, current.id); const verified = await getPost(brand, current.id);
+    if (verified.status !== "publish" || verified.link !== result.link || !verified.date_gmt || jstDay(verified.date_gmt) !== jstDay(new Date().toISOString())) throw new Error(`publication verification failed for #${current.id}`);
     markTopicStatus(brand, marker.topicId, "published");
     await client.issues.createComment({ owner, repo, issue_number: entry.issue, body: `Published from approved payload: ${verified.link}` });
     await client.issues.update({ owner, repo, issue_number: entry.issue, state: "closed" });
